@@ -11,7 +11,7 @@ defmodule CommandBuilder do
 
   Returns:
 
-      ["set foo 0 86400 5 [noreply]\r\n", "bar\r\n"]
+      ["set foo 0 86400 5 [noreply]\\r\\n", "bar\\r\\n"]
 
   Which is the commands that needs to be run sequently in memcached to do the desired action.
   """
