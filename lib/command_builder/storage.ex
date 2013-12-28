@@ -81,7 +81,7 @@ defmodule CommandBuilder.Storage do
     ]
   end
 
-  def storage_command(command_name, key, bytes, data, no_reply) when (command_name == :append or command_name == :prepend) do
+  def storage_command(command_name, key, bytes, data, no_reply) when (no_reply == true and command_name == :append or command_name == :prepend) do
     [
       "#{command_name} #{key} #{bytes} [noreply]\r\n",
       "#{data}\r\n"
@@ -101,7 +101,7 @@ defmodule CommandBuilder.Storage do
     ]
   end
 
-  def storage_command(command_name, key, bytes, data, no_reply, cas_unique, flags, exptime) do
+  def storage_command(command_name, key, bytes, data, no_reply, cas_unique, flags, exptime) when (no_reply == true) do
     [
       "#{command_name} #{key} #{flags} #{exptime} #{bytes} #{cas_unique} [noreply]\r\n",
       "#{data}\r\n"
@@ -118,7 +118,7 @@ defmodule CommandBuilder.Storage do
     ]
   end
 
-  def storage_command(command_name, key, bytes, data, no_reply, flags, exptime) do
+  def storage_command(command_name, key, bytes, data, no_reply, flags, exptime) when (no_reply == true) do
     [
       "#{command_name} #{key} #{flags} #{exptime} #{bytes} [noreply]\r\n",
       "#{data}\r\n"
