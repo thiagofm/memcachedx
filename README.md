@@ -24,11 +24,6 @@ Yes, there's decent docs for this library.
 
 ## Contributing
 
-### Running development mode
-
-    bundle install
-    rackup
-
 ### Running tests
 
 Make sure you have memcached installed and running in host `localhost` and
