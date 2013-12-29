@@ -1,4 +1,4 @@
-defmodule ResponseParser.RetrievalCommandReply do
+defmodule Memcachedx.ResponseParser.RetrievalCommandReply do
   @moduledoc """
   ## Retrieval command reply specification
   (spec taken from https://github.com/memcached/memcached/blob/master/doc/protocol.txt)

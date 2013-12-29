@@ -1,4 +1,4 @@
-defmodule ResponseParser do
+defmodule Memcachedx.ResponseParser do
   @moduledoc """
     Parses responses which comes from the memcached server
   """

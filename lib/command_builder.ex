@@ -1,4 +1,4 @@
-defmodule CommandBuilder do
+defmodule Memcachedx.CommandBuilder do
   @moduledoc """
   Builds a list of commands that needs to be executed subsequently in order to interact with
   memcached with the given parameters.
@@ -7,7 +7,7 @@ defmodule CommandBuilder do
   Setting key foo with 5 bytes with the bar value and don't receive any response from the
   server (no reply option) flagged as 0 and with 86400 to expire:
 
-      CommandBuilder.storage_command(:set, "foo", "5", "bar", true, "0", "86400")
+      Memcachedx.CommandBuilder.storage_command(:set, "foo", "5", "bar", true, "0", "86400")
 
   Returns:
 

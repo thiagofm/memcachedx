@@ -1,4 +1,4 @@
-defmodule CommandBuilder.Retrieval do
+defmodule Memcachedx.CommandBuilder.Retrieval do
   @moduledoc """
   ## Usage
   See CommandBuilder module docs

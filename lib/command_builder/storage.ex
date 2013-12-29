@@ -1,4 +1,4 @@
-defmodule CommandBuilder.Storage do
+defmodule Memcachedx.CommandBuilder.Storage do
   @moduledoc """
   ## Usage
   See CommandBuilder module docs

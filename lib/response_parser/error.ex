@@ -1,8 +1,8 @@
-defmodule ResponseParser.Error do
+defmodule Memcachedx.ResponseParser.Error do
   @moduledoc """
   ## Usage
 
-  ResponseParser.Error.parse("CLIENT_ERROR random_error\r\n") # {:error, "random_error"}
+  Memcachedx.ResponseParser.Error.parse("CLIENT_ERROR random_error\r\n") # {:error, "random_error"}
 
   ## Error strings specification
   (spec taken from https://github.com/memcached/memcached/blob/master/doc/protocol.txt)

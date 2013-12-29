@@ -1,8 +1,8 @@
-defmodule ResponseParser.StorageCommandReply do
+defmodule Memcachedx.ResponseParser.StorageCommandReply do
   @moduledoc """
   ## Usage
 
-  ResponseParser.StorageCommandReply.parse("CLIENT_ERROR random_error\r\n") # {:error, "random_error"}
+  Memcachedx.ResponseParser.StorageCommandReply.parse("CLIENT_ERROR random_error\r\n") # {:error, "random_error"}
 
   ## Storage command reply specification
   (spec taken from https://github.com/memcached/memcached/blob/master/doc/protocol.txt)
