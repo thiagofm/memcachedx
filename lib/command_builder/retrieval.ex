@@ -47,14 +47,14 @@ defmodule CommandBuilder.Retrieval do
   """
 
   @doc """
-    Get command for multiple keys(list of strings)
+    get/gets command for multiple keys(list of strings)
   """
   def retrieval_command(command, items) when is_list(items) and (command == :get or command == :gets) do
     ["#{command} #{Enum.join(items, " ")}\r\n"]
   end
 
   @doc """
-    Get command for a single key(string)
+    get/gets command for a single key(string)
   """
   def retrieval_command(command, item) when command == :get or command == :gets do
     ["#{command} #{item}\r\n"]
