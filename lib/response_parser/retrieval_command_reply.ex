@@ -43,29 +43,27 @@ defmodule ResponseParser.RetrievalCommandReply do
   """
 
   @doc """
-    Parses a list with 2 elements, one is composed of informations
+    Parses a list with 2 elements, one is composed of information
     about the stored memcached key and the other is the stored data itself.
   """
   def parse(server_response) when is_list(server_response) do
-    # Second line of response
+    # Carries the value from the memcached key
     data_match = Regex.run(%r/^(.*)\r\n$/, Enum.fetch!(server_response, 1))
 
     cond do
-      default_match = Regex.run(%r/^VALUE ([^ ]*) ([^ ]*) ([^ ]*)\r\n/, Enum.fetch!(server_response, 0)) ->
+      match = Regex.run(%r/^VALUE ([^ ]*) ([^ ]*) ([^ ]*)( ([^ ]*))?\r\n/, Enum.fetch!(server_response, 0)) ->
+        # Checks for existance of cas flag
+        case Enum.fetch(match, 5) do
+          {:ok, value} -> cas = value
+          :error -> cas = nil
+        end
+
         [
-          key: Enum.fetch!(default_match, 1),
-          flags: Enum.fetch!(default_match, 2),
-          bytes: Enum.fetch!(default_match, 3),
-          cas_unique: nil,
-          data: Enum.fetch!(default_match, 1)
-        ]
-      cas_match = Regex.run(%r/^VALUE ([^ ]*) ([^ ]*) ([^ ]*) ([^ ]*)\r\n/, Enum.fetch!(server_response, 0)) ->
-        [
-          key: Enum.fetch!(cas_match, 1),
-          flags: Enum.fetch!(cas_match, 2),
-          bytes: Enum.fetch!(cas_match, 3),
-          cas_unique: Enum.fetch!(cas_match, 4),
-          data: Enum.fetch!(cas_match, 1)
+          key: Enum.fetch!(match, 1),
+          flags: Enum.fetch!(match, 2),
+          bytes: Enum.fetch!(match, 3),
+          cas_unique: cas,
+          data: Enum.fetch!(match, 1)
         ]
       true ->
         raise(ArgumentError, message: "Unknown output from server.")
