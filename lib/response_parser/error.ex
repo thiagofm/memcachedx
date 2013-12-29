@@ -36,18 +36,14 @@ defmodule ResponseParser.Error do
   """
 
   def parse(server_response) do
-    if server_response =~ %r/ERROR\r\n/ do
-      [error: [message: "The client sent a nonexistent command name.", type: :command]]
-    else
-      if server_response =~ %r/CLIENT_ERROR (.*)\r\n/ do
-        [error: [message: Enum.fetch!(Regex.run(%r/CLIENT_ERROR (.*)\r\n/, server_response), 1), type: :client]]
-      else
-        if server_response =~ %r/SERVER_ERROR (.*)\r\n/ do
-          [error: [message: Enum.fetch!(Regex.run(%r/SERVER_ERROR (.*)\r\n/, server_response), 1), type: :server]]
-        else
-          raise("Unknown output from server.")
-        end
-      end
+    cond do
+      server_response =~ %r/ERROR\r\n/ ->
+        [error: [message: "The client sent a nonexistent command name.", type: :command]]
+      match = Regex.run(%r/CLIENT_ERROR (.*)\r\n/, server_response) ->
+        [error: [message: Enum.fetch!(match, 1), type: :client]]
+      match = Regex.run(%r/SERVER_ERROR (.*)\r\n/, server_response) ->
+        [error: [message: Enum.fetch!(match, 1), type: :server]]
+      true -> raise(ArgumentError, message: "Unknown output from server.")
     end
   end
 end
