@@ -35,6 +35,9 @@ defmodule ResponseParser.Error do
   possibility.
   """
 
+  @doc """
+  Parses an error from server
+  """
   def parse(server_response) do
     cond do
       server_response =~ %r/ERROR\r\n/ ->

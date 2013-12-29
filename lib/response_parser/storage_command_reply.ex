@@ -23,6 +23,9 @@ defmodule ResponseParser.StorageCommandReply do
   with a "cas" command did not exist.
   """
 
+  @doc """
+  Parses a storage command reply from the server
+  """
   def parse(server_reply) do
     cond do
       server_reply =~ %r/^STORED\r\n/ ->
