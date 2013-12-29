@@ -43,7 +43,8 @@ defmodule ResponseParser.Error do
         [error: [message: Enum.fetch!(match, 1), type: :client]]
       match = Regex.run(%r/SERVER_ERROR (.*)\r\n/, server_response) ->
         [error: [message: Enum.fetch!(match, 1), type: :server]]
-      true -> raise(ArgumentError, message: "Unknown output from server.")
+      true ->
+        raise(ArgumentError, message: "Unknown output from server.")
     end
   end
 end
