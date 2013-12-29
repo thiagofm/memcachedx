@@ -5,9 +5,8 @@ free to help or to get in touch.
 
 ## Roadmap
 
-- [x] Write command builder 
-- Write response parser(errors and so on)
-- Write connection builder
+- Write delete, stats command builders/parsers
+- Write connection
 - Write command runner
 - Write connection
 - Work on edge cases
