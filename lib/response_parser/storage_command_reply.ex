@@ -4,7 +4,7 @@ defmodule ResponseParser.StorageCommandReply do
 
   ResponseParser.StorageCommandReply.parse("CLIENT_ERROR random_error\r\n") # {:error, "random_error"}
 
-  ## Reply specification
+  ## Storage command reply specification
   (spec taken from https://github.com/memcached/memcached/blob/master/doc/protocol.txt)
 
   After sending the command line and the data blockm the client awaits
