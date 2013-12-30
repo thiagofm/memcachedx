@@ -32,7 +32,6 @@ defmodule Memcachedx.Connection do
   def handle_call({:connect, options}, from, state(state: :ready) = s) do
     case :gen_tcp.connect(options[:hostname], options[:port], []) do
       { :ok, sock } ->
-        IO.inspect sock
         s = state(options: options, sock: {:gen_tcp, sock}, reply_to: from)
         { :noreply, state(s, state: :auth) }
       { :error, reason } ->
