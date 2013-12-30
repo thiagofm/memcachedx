@@ -14,5 +14,11 @@ defmodule Memcachedx.ResponseParser.RetrievalCommandReplyTest do
 
     assert Memcachedx.ResponseParser.RetrievalCommandReply.parse([info, data]) == [key: "foo", flags: "0", bytes: "5", cas_unique: "64-bit_value", data: "foo"]
   end
+
+  test "raises error if server output is unknown" do
+    assert_raise ArgumentError, fn ->
+      Memcachedx.ResponseParser.Error.parse("Foo\r\n")
+    end
+  end
 end
 
