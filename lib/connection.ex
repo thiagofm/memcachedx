@@ -30,13 +30,17 @@ defmodule Memcachedx.Connection do
   end
 
   def handle_call({:connect, options}, from, state(state: :ready) = s) do
-    case :gen_tcp.connect(options[:hostname], options[:port], []) do
+    case :gen_tcp.connect(options[:hostname], options[:port], [ {:active, :once}, { :packet, :raw }]) do
       { :ok, sock } ->
-        s = state(options: options, sock: {:gen_tcp, sock}, reply_to: from)
-        { :noreply, state(s, state: :auth) }
+        s = state(state: :ready, options: options, sock: {:gen_tcp, sock}, reply_to: from)
+        { :reply, :ok, s }
       { :error, reason } ->
         { :stop, :normal, raise("Can't connect: #{reason}") } #TODO: Add personalized error
     end
+  end
+
+  def handle_call(:stop, from, state(state: :ready) = s) do
+    {:stop, :normal, state(s, reply_to: from) }
   end
 
   def handle_cast(msg, from) do
@@ -45,7 +49,23 @@ defmodule Memcachedx.Connection do
   def handle_info(msg, from) do
   end
 
-  def terminate(reasion, state) do
+  def stop(pid) do
+    :gen_server.call(pid, :stop)
+  end
+
+  def terminate(reason, state(sock: sock, reply_to: to, reply: reply)) do
+    if sock do
+      { mod, sock } = sock
+      mod.close(sock)
+    end
+
+    if to do
+      if reason == :normal do
+        :gen_server.reply(to, reply || :ok)
+      else
+        :gen_server.reply(to, raise("terminated: #{inspect reason}"))
+      end
+    end
   end
 
   def code_change(old_vsn, state, extra) do
