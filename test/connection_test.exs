@@ -22,10 +22,11 @@ defmodule Memcachedx.ConnectionTest do
   end
 
   test :tcp_closed do
+    :erlang.process_flag :trap_exit, true
     {:ok, pid} = Memcachedx.Connection.start_link([hostname: "localhost", port: 11211])
     Memcachedx.TestHelper.memcached_down
 
     # Here it should exit the process
-    Memcachedx.Connection.stop(pid)
+    IO.inspect Memcachedx.Connection.stop(pid)
   end
 end
