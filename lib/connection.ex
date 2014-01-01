@@ -43,14 +43,23 @@ defmodule Memcachedx.Connection do
     {:stop, :normal, state(s, reply_to: from) }
   end
 
-  def handle_cast(msg, from) do
-  end
+  def handle_info({:tcp_closed, _}, state(reply_to: to) = s) do
+    error = "TCP closed"
 
-  def handle_info(msg, from) do
+    if to do
+      :gen_server.reply(to, error)
+      { :stop, :normal, s }
+    else
+      { :stop, error, s }
+    end
   end
 
   def stop(pid) do
     :gen_server.call(pid, :stop)
+  end
+
+  def trap do
+    :erlang.process_flag :trap_exit, true
   end
 
   def terminate(reason, state(sock: sock, reply_to: to, reply: reply)) do
