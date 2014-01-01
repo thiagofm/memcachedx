@@ -58,10 +58,6 @@ defmodule Memcachedx.Connection do
     :gen_server.call(pid, :stop)
   end
 
-  def trap do
-    :erlang.process_flag :trap_exit, true
-  end
-
   def terminate(reason, state(sock: sock, reply_to: to, reply: reply)) do
     if sock do
       { mod, sock } = sock
