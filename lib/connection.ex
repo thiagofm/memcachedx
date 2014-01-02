@@ -43,6 +43,21 @@ defmodule Memcachedx.Connection do
     {:stop, :normal, state(s, reply_to: from) }
   end
 
+  def handle_call({:run_command, {:set, key, value}}, from, state(state: :ready, sock: sock) = s) do
+    coll = Memcachedx.CommandBuilder.Storage.storage_command(:set, key, byte_size(value), value, "0", "0")
+
+    { mod, sock } = sock
+
+    Enum.each(coll, fn(el) ->
+      case mod.send(sock, el) do
+        :ok -> :ok
+        :error -> raise("Stuff")
+      end
+    end)
+
+    { :noreply, state(s, reply_to: from) }
+  end
+
   def handle_info({:tcp_closed, _}, state(reply_to: to) = s) do
     error = "TCP closed"
 
@@ -52,6 +67,17 @@ defmodule Memcachedx.Connection do
     else
       { :stop, error, s }
     end
+  end
+
+  def handle_info({:tcp, sock, msg}, state(reply_to: to) = s) do
+    msg = String.from_char_list!(msg)
+    IO.inspect msg
+    
+    parsed_msg = Memcachedx.ResponseParser.StorageCommandReply.parse(msg)
+    IO.inspect parsed_msg
+
+    :gen_server.reply(to, {:ok, parsed_msg})
+    { :noreply, state }
   end
 
   def stop(pid) do
@@ -70,6 +96,12 @@ defmodule Memcachedx.Connection do
       else
         :gen_server.reply(to, raise("terminated: #{inspect reason}"))
       end
+    end
+  end
+
+  def set(pid, key, value) do
+    case :gen_server.call(pid, {:run_command, {:set, key, value}}) do
+      {:ok, res} -> {:ok, res}
     end
   end
 
