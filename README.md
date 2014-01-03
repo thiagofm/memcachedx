@@ -5,10 +5,10 @@ free to help or to get in touch.
 
 ## Roadmap
 
-- Write delete, stats command builders/parsers
-- Write connection
+- Rewrite most of commands, refactor connection in order to have the
+states it does need to have... and study.
+- Write stats command builders/parsers
 - Write command runner
-- Write connection
 - Work on edge cases
 
 ## Usage
