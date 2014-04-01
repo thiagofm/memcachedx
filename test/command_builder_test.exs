@@ -2,6 +2,7 @@ defmodule CommandBuilderTest do
   use ExUnit.Case
 
   test :opcode do
-    assert Memcachedx.CommandBuilder.opcode(:get) == <<0x00>>
+    {:ok, result} = Memcachedx.CommandBuilder.opcode(:get) 
+    assert result == <<0x00>>
   end
 end

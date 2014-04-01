@@ -17,7 +17,7 @@ defmodule Memcachedx.CommandBuilder do
   """
 
   def opcode(key) do
-    HashDict.get(HashDict.new([
+    Keyword.fetch([
       get: <<0x00>>,
       set: <<0x01>>,
       add: <<0x02>>,
@@ -42,6 +42,6 @@ defmodule Memcachedx.CommandBuilder do
       auth_request: <<0x21>>,
       auth_continue: <<0x22>>,
       touch: <<0x1C>>,
-    ]), key)
+    ], key)
   end
 end
