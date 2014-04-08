@@ -53,4 +53,8 @@ defmodule Memcachedx.Packet.HeaderTest do
   test :opaque do
     assert Memcachedx.Packet.Header.opaque(1)
   end
+
+  test :cas do
+    assert Memcachedx.Packet.Header.cas(1)
+  end
 end

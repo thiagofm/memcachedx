@@ -167,4 +167,20 @@ defmodule Memcachedx.Packet.Header do
   def opaque(opaque) do
     opaque
   end
+
+  @doc """
+  The header's CAS
+
+  ### Example
+
+      Memcached.Packet.Header.cas(0)
+
+  Returns:
+
+      1
+
+  """
+  def cas(cas) do
+    cas
+  end
 end
