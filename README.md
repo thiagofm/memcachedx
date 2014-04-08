@@ -5,11 +5,9 @@ free to help or to get in touch.
 
 ## Roadmap
 
-- Rewrite most of commands, refactor connection in order to have the
-states it does need to have... and study.
-- Write stats command builders/parsers
-- Write command runner
-- Work on edge cases
+- Commands builder for binary protocol
+- TCP socket connection I/O
+- Connection pools
 
 ## Usage
 
