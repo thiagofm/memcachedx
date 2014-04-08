@@ -141,11 +141,11 @@ defmodule Memcachedx.Packet.Header do
 
   ## Example
 
-      Memcachedx.Packet.Header.total_body_length(:get, "xpto", "value")
+      Memcachedx.Packet.Header.total_body_length(0, "hello", "")
 
   Returns:
 
-      0
+      5
 
   """
   def total_body_length(extras, key, value) do
