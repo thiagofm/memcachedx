@@ -3,7 +3,6 @@ defmodule Memcachedx.Packet.Header do
   The binary protocol hexcodes of the packet's header.
 
   ## Example
-  Memcachedx.Packet.Header
 
       Memcachedx.Packet.Header.opcode(:get)
 
@@ -15,10 +14,36 @@ defmodule Memcachedx.Packet.Header do
   """
 
   @doc """
-    The binary protocol opcodes
+  The header's magic value
+
+  ## Example
+
+      Memcachedx.Packet.Header.magic(:request)
+
+  Returns:
+
+      <<0x80>>
   """
-  def opcode(key) do
-    case key do
+  def magic(value) do
+    case value do
+      :request -> <<0x80>>
+      :response -> <<0x81>>
+    end
+  end
+
+  @doc """
+  The header's opcodes
+
+  ## Example
+
+      Memcachedx.Packet.Header.opcode(:get)
+
+  Returns:
+
+      <<0x80>>
+  """
+  def opcode(code) do
+    case code do
       :get -> <<0x00>>
       :set -> <<0x01>>
       :add -> <<0x02>>
@@ -44,5 +69,20 @@ defmodule Memcachedx.Packet.Header do
       :auth_continue -> <<0x22>>
       :touch -> <<0x1C>>
     end
+  end
+
+  @doc """
+  The header's key length
+
+  ## Example
+
+      Memcachedx.Packet.Header.key_length('xpto')
+
+  Returns:
+
+      4
+  """
+  def key_length(key) do
+    Kernel.byte_size(key)
   end
 end
