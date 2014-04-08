@@ -35,4 +35,18 @@ defmodule Memcachedx.Packet.HeaderTest do
     assert Memcachedx.Packet.Header.extra_length(:decr) == 20
     assert Memcachedx.Packet.Header.extra_length(:decrq) == 20
   end
+
+  test :data_type do
+    assert Memcachedx.Packet.Header.data_type == 0
+  end
+
+  test :reserved do
+    assert Memcachedx.Packet.Header.reserved == 0
+  end
+
+  test :total_body_length do
+    assert Memcachedx.Packet.Header.total_body_length(0, "hello", "") == 5
+    assert Memcachedx.Packet.Header.total_body_length(0, "hello", "world") == 10
+    assert Memcachedx.Packet.Header.total_body_length(2, "hello", "world") == 12
+  end
 end

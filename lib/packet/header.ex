@@ -103,4 +103,52 @@ defmodule Memcachedx.Packet.Header do
       opcode when opcode in [:incr, :incrq, :decr, :decrq] -> 20
     end
   end
+
+  @doc """
+  The header's data type
+
+  ## Example
+
+      Memcachedx.Packet.Header.data_type
+
+  Returns:
+
+      0
+
+  """
+  def data_type do
+    0
+  end
+
+  @doc """
+  The header's reserved
+
+  ## Example
+
+      Memcachedx.Packet.Header.reserved
+
+  Returns:
+
+      0
+
+  """
+  def reserved do
+    0
+  end
+
+  @doc """
+  The header's total body length
+
+  ## Example
+
+      Memcachedx.Packet.Header.total_body_length(:get, "xpto", "value")
+
+  Returns:
+
+      0
+
+  """
+  def total_body_length(extras, key, value) do
+    extras + key_length(key) + key_length(value)
+  end
 end
