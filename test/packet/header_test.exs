@@ -49,4 +49,8 @@ defmodule Memcachedx.Packet.HeaderTest do
     assert Memcachedx.Packet.Header.total_body_length(0, "hello", "world") == 10
     assert Memcachedx.Packet.Header.total_body_length(2, "hello", "world") == 12
   end
+
+  test :opaque do
+    assert Memcachedx.Packet.Header.opaque(1)
+  end
 end

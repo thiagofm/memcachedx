@@ -151,4 +151,20 @@ defmodule Memcachedx.Packet.Header do
   def total_body_length(extras, key, value) do
     extras + key_length(key) + key_length(value)
   end
+
+  @doc """
+  The header's opaque
+
+  ### Example
+
+      Memcached.Packet.Header.opaque(1)
+
+  Returns:
+
+      1
+
+  """
+  def opaque(opaque) do
+    opaque
+  end
 end
