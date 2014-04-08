@@ -42,8 +42,8 @@ defmodule Memcachedx.Packet.Header do
 
       <<0x80>>
   """
-  def opcode(code) do
-    case code do
+  def opcode(opcode) do
+    case opcode do
       :get -> <<0x00>>
       :set -> <<0x01>>
       :add -> <<0x02>>
@@ -64,10 +64,6 @@ defmodule Memcachedx.Packet.Header do
       :deleteq -> <<0x14>>
       :incrq -> <<0x15>>
       :decrq -> <<0x16>>
-      :auth_negotiation -> <<0x20>>
-      :auth_request -> <<0x21>>
-      :auth_continue -> <<0x22>>
-      :touch -> <<0x1C>>
     end
   end
 
@@ -84,5 +80,43 @@ defmodule Memcachedx.Packet.Header do
   """
   def key_length(key) do
     Kernel.byte_size(key)
+  end
+
+  @doc """
+  The header's extra length
+
+  ## Example
+
+      Memcachedx.Packet.Header.extra_length(:get)
+
+  Returns:
+
+      <<0x04>>
+
+  The returned value represents the amount of byte flags needed
+  """
+  def extra_length(opcode) do
+    case opcode do
+      :noop -> 0
+      :version -> 0
+      :append -> 0
+      :prepend -> 0
+      :stat -> 0
+      :delete -> 0
+      :deleteq -> 0
+      :get -> 4
+      :getkq -> 4
+      :flush -> 4
+      :set -> 8
+      :setq -> 8
+      :add -> 8
+      :addq -> 8
+      :replace -> 8
+      :replaceq -> 8
+      :incr -> 20
+      :incrq -> 20
+      :decr -> 20
+      :decrq -> 20
+    end
   end
 end
