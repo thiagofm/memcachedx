@@ -91,32 +91,16 @@ defmodule Memcachedx.Packet.Header do
 
   Returns:
 
-      <<0x04>>
+      4
 
   The returned value represents the amount of byte flags needed
   """
   def extra_length(opcode) do
     case opcode do
-      :noop -> 0
-      :version -> 0
-      :append -> 0
-      :prepend -> 0
-      :stat -> 0
-      :delete -> 0
-      :deleteq -> 0
-      :get -> 4
-      :getkq -> 4
-      :flush -> 4
-      :set -> 8
-      :setq -> 8
-      :add -> 8
-      :addq -> 8
-      :replace -> 8
-      :replaceq -> 8
-      :incr -> 20
-      :incrq -> 20
-      :decr -> 20
-      :decrq -> 20
+      opcode when opcode in [:noop, :version, :append, :prepend, :stat, :delete, :deleteq] -> 0
+      opcode when opcode in [:get, :getkq, :flush] -> 4
+      opcode when opcode in [:set, :setq, :add, :addq, :replace, :replaceq] -> 8
+      opcode when opcode in [:incr, :incrq, :decr, :decrq] -> 20
     end
   end
 end
