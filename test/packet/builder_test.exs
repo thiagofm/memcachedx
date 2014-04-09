@@ -23,7 +23,25 @@ defmodule Memcachedx.Packet.BuilderTest do
         28| 0x6f ('o')    |
 
   """
-  test :get do
+  test :requirements_full do
+    options = [key: "xpto", cas: 3, opaque: 2]
+    require Memcachedx.Packet.Builder
+    Memcachedx.Packet.Builder.requirements(:get)
+    assert key == "xpto"
+    assert cas == 3
+    assert opaque == 2
+  end
+
+  test :requirements_empty do
+    options = [key: "xpto"]
+    require Memcachedx.Packet.Builder
+    Memcachedx.Packet.Builder.requirements(:get)
+    assert key == "xpto"
+    assert cas == 0
+    assert opaque == 0
+  end
+
+  test :request do
     #host = 'localhost'
     #port = 11211
     #{ok, socket} = :gen_tcp.connect(host, port, [:binary, {:packet, 0}])

@@ -162,7 +162,7 @@ defmodule Memcachedx.Packet.Header do
 
   ### Example
 
-      Memcached.Packet.Header.opaque(1)
+      Memcachedx.Packet.Header.opaque(1)
 
   Returns:
 
@@ -178,7 +178,7 @@ defmodule Memcachedx.Packet.Header do
 
   ### Example
 
-      Memcached.Packet.Header.cas(0)
+      Memcachedx.Packet.Header.cas(0)
 
   Returns:
 

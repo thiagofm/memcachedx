@@ -21,10 +21,20 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
 
+  defmacro requirements(opcode) when opcode == :get do
+    options = quote do: var!(options)
+    quote do
+      var!(key) = unquote(options)[:key]
+      var!(cas) = unquote(options)[:cas] || 0
+      var!(opaque) = unquote(options)[:opaque] || 0
+    end
+  end
+
   def request([opcode, options]) when opcode == :get do
-    opaque = options[:opaque] || 0
-    cas = options[:cas] || 0
-    key = options[:key]
+    requirements(:get)
+    #opaque = options[:opaque] || 0
+    #cas = options[:cas] || 0
+    #key = options[:key]
 
     <<
       Memcachedx.Packet.Header.magic(:request)                    ,
