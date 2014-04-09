@@ -40,12 +40,11 @@ defmodule Memcachedx.Packet.Builder do
       Memcachedx.Packet.Header.total_body_length(0, key, 0)   :: [size(4), unit(8)],
       Memcachedx.Packet.Header.opaque(opaque)                 :: [size(4), unit(8)],
       Memcachedx.Packet.Header.cas(cas)                       :: [size(8), unit(8)],
-      key                                                     :: binary
-    >>
+    >> <> Memcachedx.Packet.Body.build(opcode, options)
   end
 
   @doc """
-  Builds a binary request for a set
+  Builds a binary request for an add
 
   Request:
 
@@ -72,10 +71,6 @@ defmodule Memcachedx.Packet.Builder do
       Memcachedx.Packet.Header.total_body_length(extras, key, value):: [size(4), unit(8)],
       Memcachedx.Packet.Header.opaque(opaque)                 :: [size(4), unit(8)],
       Memcachedx.Packet.Header.cas(cas)                       :: [size(8), unit(8)],
-      flags                                                   :: [size(4), unit(8)],
-      expiry                                                  :: [size(4), unit(8)],
-      key                                                     :: binary,
-      value                                                   :: binary,
-    >>
+    >> <> Memcachedx.Packet.Body.build(opcode, options)
   end
 end
