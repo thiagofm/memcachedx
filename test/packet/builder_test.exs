@@ -24,7 +24,7 @@ defmodule Memcachedx.Packet.BuilderTest do
 
   """
   test 'request get' do
-    assert Memcachedx.Packet.Builder.request([:get, [key: "Hello", cas: 0, flags: 0]]) == <<
+    assert Memcachedx.Packet.Builder.request([:get, [key: "Hello", cas: 0]]) == <<
       0x80, 0x00, 0x00, 0x05,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x05,

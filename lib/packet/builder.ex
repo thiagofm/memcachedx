@@ -40,7 +40,7 @@ defmodule Memcachedx.Packet.Builder do
       Memcachedx.Packet.Header.total_body_length(0, key, 0)   :: [size(4), unit(8)],
       Memcachedx.Packet.Header.opaque(opaque)                 :: [size(4), unit(8)],
       Memcachedx.Packet.Header.cas(cas)                       :: [size(8), unit(8)],
-    >> <> Memcachedx.Packet.Body.build(opcode, options)
+    >> <> Memcachedx.Packet.Body.merge_body(options)
   end
 
   @doc """
@@ -71,6 +71,6 @@ defmodule Memcachedx.Packet.Builder do
       Memcachedx.Packet.Header.total_body_length(extras, key, value):: [size(4), unit(8)],
       Memcachedx.Packet.Header.opaque(opaque)                 :: [size(4), unit(8)],
       Memcachedx.Packet.Header.cas(cas)                       :: [size(8), unit(8)],
-    >> <> Memcachedx.Packet.Body.build(opcode, options)
+    >> <> Memcachedx.Packet.Body.merge_body(options)
   end
 end
