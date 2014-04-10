@@ -57,4 +57,17 @@ defmodule Memcachedx.Packet.HeaderTest do
   test :cas do
     assert Memcachedx.Packet.Header.cas(1)
   end
+
+  test :merge_header do
+    opcode = :get
+    options = [value: "", key: "Hello", extras: 0, cas: 0, opaque: 0]
+    assert Memcachedx.Packet.Header.merge_header(opcode, options) == <<
+      0x80, 0x00, 0x00, 0x05,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x05,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00
+    >>
+  end
 end

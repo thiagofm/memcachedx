@@ -188,4 +188,21 @@ defmodule Memcachedx.Packet.Header do
   def cas(cas) do
     cas
   end
+
+  @doc """
+    Merges the whole header into a binary response
+  """
+  def merge_header(opcode, options) do
+    <<
+      Memcachedx.Packet.Header.magic(:request)                                     ,
+      Memcachedx.Packet.Header.opcode(opcode)                                      ,
+      Memcachedx.Packet.Header.key_length(options[:key])                :: [size(2), unit(8)],
+      Memcachedx.Packet.Header.extra_length(opcode)                                ,
+      Memcachedx.Packet.Header.data_type                                           ,
+      Memcachedx.Packet.Header.reserved                       :: [size(2), unit(8)],
+      Memcachedx.Packet.Header.total_body_length(options[:extras], options[:key], options[:value]):: [size(4), unit(8)],
+      Memcachedx.Packet.Header.opaque(options[:opaque])                 :: [size(4), unit(8)],
+      Memcachedx.Packet.Header.cas(options[:cas])                       :: [size(8), unit(8)],
+    >>
+  end
 end

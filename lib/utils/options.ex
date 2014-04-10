@@ -8,6 +8,7 @@ defmodule Memcachedx.Utils.Options do
       if options[var] == nil do
         case var do
           :key -> opt = Keyword.merge(opt, [{var, ""}])
+          :value -> opt = Keyword.merge(opt, [{var, ""}])
           _ -> opt = Keyword.merge(opt, [{var, 0}])
         end
       else
