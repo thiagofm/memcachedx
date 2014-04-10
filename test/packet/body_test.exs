@@ -1,5 +1,6 @@
 defmodule Memcachedx.Packet.BodyTest do
   use ExUnit.Case
+  doctest Memcachedx.Packet.Body
 
   test 'merge_body set example' do
     options = [key: "Hello", value: "World", flags: 0xdeadbeef, expiry: 0x00000e10]

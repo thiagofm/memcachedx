@@ -29,6 +29,13 @@ defmodule Memcachedx.Packet.Body do
 
   @doc """
   Merges all body related options in the order that is expected from the memcached binary protocol
+
+  ### Example
+  iex> Memcachedx.Packet.Body.merge_body([key: "Hello"])
+  <<
+      0x48, 0x65, 0x6c, 0x6c,
+      0x6f
+  >>
   """
   def merge_body(options) do
     order = [:delta, :initial, :expiration, :flags, :expiry, :key, :value]

@@ -1,10 +1,19 @@
 defmodule Memcachedx.Utils.Options do
-  defmacro initialize_vars(options, vars) do
-    options = quote do: var!(options)
-    quote do
-      Enum.each(unquote(vars), fn (v) ->
-        var!(quote(v)) = unquote(options)[v]
-      end)
-    end
+  @doc """
+  Initialize variables included in the vars list as 0 or empty string instead
+  of nil
+  """
+  def initialize_vars(options, vars) do
+    Enum.reduce(vars, [], fn (var, opt) ->
+      if options[var] == nil do
+        case var do
+          :key -> opt = Keyword.merge(opt, [{var, ""}])
+          _ -> opt = Keyword.merge(opt, [{var, 0}])
+        end
+      else
+        opt = Keyword.merge(opt, [{var, options[var]}])
+      end
+      opt
+    end)
   end
 end
