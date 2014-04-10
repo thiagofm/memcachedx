@@ -27,6 +27,9 @@ defmodule Memcachedx.Packet.Body do
     << value :: binary >>
   end
 
+  @doc """
+  Merges all body related options in the order that is expected from the memcached binary protocol
+  """
   def merge_body(options) do
     order = [:flags, :expiry, :key, :value]
 
@@ -42,21 +45,5 @@ defmodule Memcachedx.Packet.Body do
       end
       acc
     end)
-  end
-
-  @doc """
-  Builds a body request
-  """
-  def build(opcode, options) do
-    case opcode do
-      opcode when opcode in [:get, :getkq] -> << options[:key] :: binary >>
-      opcode when opcode in [:set, :setq, :add, :addq, :replace, :replaceq] ->
-        <<
-          options[:flags] :: [size(4), unit(8)],
-          options[:expiry] :: [size(4), unit(8)],
-          options[:key] :: binary,
-          options[:value] :: binary
-        >>
-    end
   end
 end
