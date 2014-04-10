@@ -8,15 +8,15 @@ defmodule Memcachedx.Packet.Body do
   end
 
   def delta(delta) do
-    delta
+    << delta :: [size(8), unit(8)] >>
   end
 
   def initial(initial) do
-    initial
+    << initial :: [size(8), unit(8)] >>
   end
 
   def expiration(expiration) do
-    expiration
+    << expiration :: [size(4), unit(8)] >>
   end
 
   def key(key) do
@@ -31,11 +31,14 @@ defmodule Memcachedx.Packet.Body do
   Merges all body related options in the order that is expected from the memcached binary protocol
   """
   def merge_body(options) do
-    order = [:flags, :expiry, :key, :value]
+    order = [:delta, :initial, :expiration, :flags, :expiry, :key, :value]
 
     Enum.reduce(order, <<>>, fn (item, acc) ->
       if Keyword.has_key?(options, item) do
         acc = acc <> case item do
+          :delta -> delta(options[:delta])
+          :initial -> initial(options[:initial])
+          :expiration -> expiration(options[:expiration])
           :flags -> flags(options[:flags])
           :expiry -> expiry(options[:expiry])
           :key -> key(options[:key])
