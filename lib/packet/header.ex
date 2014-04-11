@@ -13,17 +13,6 @@ defmodule Memcachedx.Packet.Header do
   Which is the hexcode necessary to build up the packet to communicate with memcached.
   """
 
-  @doc """
-  The header's magic value
-
-  ## Example
-
-      Memcachedx.Packet.Header.magic(:request)
-
-  Returns:
-
-      <<0x80>>
-  """
   def magic(value) do
     case value do
       :request -> 0x80
@@ -31,17 +20,6 @@ defmodule Memcachedx.Packet.Header do
     end
   end
 
-  @doc """
-  The header's opcodes
-
-  ## Example
-
-      Memcachedx.Packet.Header.opcode(:get)
-
-  Returns:
-
-      <<0x80>>
-  """
   def opcode(opcode) do
     case opcode do
       :get -> 0x00
@@ -68,34 +46,10 @@ defmodule Memcachedx.Packet.Header do
     end
   end
 
-  @doc """
-  The header's key length
-
-  ## Example
-
-      Memcachedx.Packet.Header.key_length('xpto')
-
-  Returns:
-
-      4
-  """
   def key_length(key) do
     Kernel.byte_size(key)
   end
 
-  @doc """
-  The header's extra length
-
-  ## Example
-
-      Memcachedx.Packet.Header.extra_length(:get)
-
-  Returns:
-
-      4
-
-  The returned value represents the amount of byte flags needed
-  """
   def extra_length(opcode) do
     case opcode do
       opcode when opcode in [:noop, :version, :append,
@@ -107,50 +61,14 @@ defmodule Memcachedx.Packet.Header do
     end
   end
 
-  @doc """
-  The header's data type
-
-  ## Example
-
-      Memcachedx.Packet.Header.data_type
-
-  Returns:
-
-      0
-
-  """
   def data_type do
     0
   end
 
-  @doc """
-  The header's reserved
-
-  ## Example
-
-      Memcachedx.Packet.Header.reserved
-
-  Returns:
-
-      0
-
-  """
   def reserved do
     0
   end
 
-  @doc """
-  The header's total body length
-
-  ## Example
-
-      Memcachedx.Packet.Header.total_body_length(0, "hello", "")
-
-  Returns:
-
-      5
-
-  """
   def total_body_length(extras, key, 0) do
     extras + key_length(key) + 0
   end
@@ -159,35 +77,10 @@ defmodule Memcachedx.Packet.Header do
     extras + key_length(key) + key_length(value)
   end
 
-
-  @doc """
-  The header's opaque
-
-  ### Example
-
-      Memcachedx.Packet.Header.opaque(1)
-
-  Returns:
-
-      1
-
-  """
   def opaque(opaque) do
     opaque
   end
 
-  @doc """
-  The header's CAS
-
-  ### Example
-
-      Memcachedx.Packet.Header.cas(0)
-
-  Returns:
-
-      1
-
-  """
   def cas(cas) do
     cas
   end
