@@ -1,18 +1,7 @@
 defmodule Memcachedx.Packet.Header do
   @moduledoc """
-  The binary protocol hexcodes of the packet's header.
-
-  ## Example
-
-      Memcachedx.Packet.Header.opcode(:get)
-
-  Returns:
-
-      <<0x00>>
-
-  Which is the hexcode necessary to build up the packet to communicate with memcached.
+  Builds up the header of a packet to be sent to talk with the memcached server.
   """
-
   def magic(value) do
     case value do
       :request -> 0x80
@@ -86,7 +75,18 @@ defmodule Memcachedx.Packet.Header do
   end
 
   @doc """
-    Merges the whole header into a binary response
+  Merges the whole header into a binary response
+
+  ### Example
+  iex> Memcachedx.Packet.Header.merge_header(opcode, options)
+  <<
+      0x80, 0x00, 0x00, 0x05,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x05,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00
+  >>
   """
   def merge_header(opcode, options) do
     <<

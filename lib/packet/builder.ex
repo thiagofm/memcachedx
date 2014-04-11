@@ -2,18 +2,20 @@ defmodule Memcachedx.Packet.Builder do
   @moduledoc """
   Builds a protocol request
 
-  ## Example
-
-      Memcachedx.Packet.Builder.request([:get])
-
-  Returns:
-
-      Some hex
+  ### Example
+  iex> Memcachedx.Packet.Builder.request([:get, [key: "Hello", cas: 0]])
+  <<
+    0x80, 0x00, 0x00, 0x05,
+    0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x05,
+    0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00,
+    0x48, 0x65, 0x6c, 0x6c,
+    0x6f
+  >>
 
   Which is the binary needed to do the desired request to memcached.
-
-  From memcached's binary protocol info:
-
   """
 
   @doc """

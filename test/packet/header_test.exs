@@ -1,5 +1,6 @@
 defmodule Memcachedx.Packet.HeaderTest do
   use ExUnit.Case
+  doctest Memcachedx.Packet.Body
 
   test :magic do
     assert Memcachedx.Packet.Header.magic(:request) == 0x80

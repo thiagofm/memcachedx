@@ -1,4 +1,8 @@
 defmodule Memcachedx.Packet.Body do
+  @moduledoc """
+  Builds up the body of a packet to be sent to talk with the memcached server.
+  """
+
   def flags(flags) do
     << flags :: [size(4), unit(8)] >>
   end

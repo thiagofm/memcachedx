@@ -1,5 +1,6 @@
 defmodule Memcachedx.Packet.BuilderTest do
   use ExUnit.Case
+  doctest Memcachedx.Packet.Builder
 
   @doc """
       Byte/     0       |       1       |       2       |       3       |
