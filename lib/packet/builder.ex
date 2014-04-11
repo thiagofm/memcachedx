@@ -26,7 +26,7 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode == :get do
-    vars = [:opaque, :key, :cas, :extras, :key, :value]
+    vars = []
     options = Memcachedx.Utils.Options.initialize_vars(options, vars)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
@@ -42,7 +42,7 @@ defmodule Memcachedx.Packet.Builder do
   MAY have value.
   """
   def request([opcode, options]) when opcode in [:add, :set, :replace] do
-    vars = [:opaque, :cas, :key, :value, :extras, :flags, :expiry]
+    vars = [:flags, :expiry]
     options = Memcachedx.Utils.Options.initialize_vars(options, vars)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
@@ -58,8 +58,7 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:delete] do
-    vars = [:opaque, :cas, :key, :extras, :value]
-    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+    options = Memcachedx.Utils.Options.initialize_vars(options)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
   end
@@ -74,7 +73,7 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:incr, :decr] do
-    vars = [:key, :delta, :initial, :expiration, :extras, :value, :opaque, :cas]
+    vars = [:delta, :initial, :expiration]
     options = Memcachedx.Utils.Options.initialize_vars(options, vars)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
@@ -90,8 +89,7 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:quit] do
-    vars = [:extras, :key, :value, :opaque, :cas]
-    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+    options = Memcachedx.Utils.Options.initialize_vars(options)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
   end

@@ -3,7 +3,14 @@ defmodule Memcachedx.Utils.Options do
   Initialize variables included in the vars list as 0 or empty string instead
   of nil
   """
+  def initialize_vars(options) do
+    initialize_vars(options, [])
+  end
+
   def initialize_vars(options, vars) do
+    default_vars_list = [:extras, :key, :value, :opaque, :cas]
+    vars = vars ++ default_vars_list
+
     Enum.reduce(vars, [], fn (var, opt) ->
       if options[var] == nil do
         case var do
