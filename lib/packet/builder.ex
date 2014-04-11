@@ -26,8 +26,7 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode == :get do
-    vars = []
-    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+    options = Memcachedx.Utils.Options.initialize_vars(options)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
   end
