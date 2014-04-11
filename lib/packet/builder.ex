@@ -63,4 +63,20 @@ defmodule Memcachedx.Packet.Builder do
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
   end
+
+  @doc """
+  Builds a binary request for a incr/decr
+
+  Request:
+
+  MUST NOT have extras.
+  MUST have key.
+  MUST NOT have value.
+  """
+  def request([opcode, options]) when opcode in [:incr, :decr] do
+    vars = [:key, :delta, :initial, :expiration, :extras, :value, :opaque, :cas]
+    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+
+    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+  end
 end
