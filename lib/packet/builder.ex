@@ -110,4 +110,19 @@ defmodule Memcachedx.Packet.Builder do
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
   end
+
+  @doc """
+  Builds a binary request for a noop
+
+  Request:
+
+  MUST NOT have extras.
+  MUST NOT have key.
+  MUST NOT have value.
+  """
+  def request([opcode, options]) when opcode in [:noop] do
+    options = Memcachedx.Utils.Options.initialize_vars(options)
+
+    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+  end
 end
