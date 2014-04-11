@@ -5,7 +5,7 @@ free to help or to get in touch.
 
 ## Roadmap
 
-- Commands builder for binary protocol
+- Commands builder for binary protocol with full compatibility/test coverage for http://code.google.com/p/memcached/wiki/BinaryProtocolRevamped
 - TCP socket connection I/O
 - Connection pools
 
