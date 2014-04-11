@@ -33,7 +33,7 @@ defmodule Memcachedx.Packet.Builder do
   end
 
   @doc """
-  Builds a binary request for an add
+  Builds a binary request for an add, set or replace
 
   Request:
 
@@ -43,6 +43,22 @@ defmodule Memcachedx.Packet.Builder do
   """
   def request([opcode, options]) when opcode in [:add, :set, :replace] do
     vars = [:opaque, :cas, :key, :value, :extras, :flags, :expiry]
+    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+
+    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+  end
+
+  @doc """
+  Builds a binary request for a delete
+
+  Request:
+
+  MUST NOT have extras.
+  MUST have key.
+  MUST NOT have value.
+  """
+  def request([opcode, options]) when opcode in [:delete] do
+    vars = [:opaque, :cas, :key, :extras, :value]
     options = Memcachedx.Utils.Options.initialize_vars(options, vars)
 
     Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
