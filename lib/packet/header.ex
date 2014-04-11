@@ -51,6 +51,7 @@ defmodule Memcachedx.Packet.Header do
       :delete -> 0x04
       :incr -> 0x05
       :decr -> 0x06
+      :quit -> 0x07
       :flush -> 0x08
       :noop -> 0x0A
       :version -> 0x0B
@@ -97,10 +98,12 @@ defmodule Memcachedx.Packet.Header do
   """
   def extra_length(opcode) do
     case opcode do
-      opcode when opcode in [:noop, :version, :append, :prepend, :stat, :delete, :deleteq, :get, :getkq] -> 0
+      opcode when opcode in [:noop, :version, :append,
+        :prepend, :stat, :delete, :deleteq, :get, :getkq, :quit] -> 0
       opcode when opcode in [:flush] -> 4
       opcode when opcode in [:set, :setq, :add, :addq, :replace, :replaceq] -> 8
       opcode when opcode in [:incr, :incrq, :decr, :decrq] -> 20
+      true -> raise Error
     end
   end
 
