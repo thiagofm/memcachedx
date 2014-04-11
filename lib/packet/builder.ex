@@ -41,7 +41,7 @@ defmodule Memcachedx.Packet.Builder do
   MUST have key.
   MAY have value.
   """
-  def request([opcode, options]) when opcode in [:add, :set] do
+  def request([opcode, options]) when opcode in [:add, :set, :replace] do
     vars = [:opaque, :cas, :key, :value, :extras, :flags, :expiry]
     options = Memcachedx.Utils.Options.initialize_vars(options, vars)
 
