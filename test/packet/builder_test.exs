@@ -1,6 +1,7 @@
 defmodule Memcachedx.Packet.BuilderTest do
   use ExUnit.Case
-  doctest Memcachedx.Packet.Builder
+  alias Memcachedx.Packet.Builder, as: Builder
+  doctest Builder
 
   @doc """
       Byte/     0       |       1       |       2       |       3       |
@@ -25,7 +26,7 @@ defmodule Memcachedx.Packet.BuilderTest do
 
   """
   test 'request get' do
-    assert Memcachedx.Packet.Builder.request([:get, [key: "Hello", cas: 0]]) == <<
+    assert Builder.request([:get, [key: "Hello", cas: 0]]) == <<
       0x80, 0x00, 0x00, 0x05,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x05,
@@ -66,7 +67,7 @@ defmodule Memcachedx.Packet.BuilderTest do
         +---------------+---------------+
   """
   test 'request add' do
-    assert Memcachedx.Packet.Builder.request([:add, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
+    assert Builder.request([:add, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
       0x80, 0x02, 0x00, 0x05,
       0x08, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x12,
@@ -82,7 +83,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request set' do
-    assert Memcachedx.Packet.Builder.request([:set, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
+    assert Builder.request([:set, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
       0x80, 0x01, 0x00, 0x05,
       0x08, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x12,
@@ -98,7 +99,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request replace' do
-    assert Memcachedx.Packet.Builder.request([:replace, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
+    assert Builder.request([:replace, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
       0x80, 0x03, 0x00, 0x05,
       0x08, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x12,
@@ -114,7 +115,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request delete' do
-    assert Memcachedx.Packet.Builder.request([:delete, [key: "Hello"]]) == <<
+    assert Builder.request([:delete, [key: "Hello"]]) == <<
       0x80, 0x04, 0x00, 0x05,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x05,
@@ -127,7 +128,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request incr' do
-    assert Memcachedx.Packet.Builder.request([:incr, [key:
+    assert Builder.request([:incr, [key:
         "counter", extras: 20, delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == <<
       0x80, 0x05, 0x00, 0x07,
       0x14, 0x00, 0x00, 0x00,
@@ -146,7 +147,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request decr' do
-    assert Memcachedx.Packet.Builder.request([:decr, [key:
+    assert Builder.request([:decr, [key:
         "counter", extras: 20, delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == <<
       0x80, 0x06, 0x00, 0x07,
       0x14, 0x00, 0x00, 0x00,
@@ -165,7 +166,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request quit' do
-    assert Memcachedx.Packet.Builder.request([:quit, []]) == <<
+    assert Builder.request([:quit, []]) == <<
       0x80, 0x07, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
@@ -176,7 +177,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request flush' do
-    assert Memcachedx.Packet.Builder.request([:flush, [expiration: 0x000e10, extras: 4]]) == <<
+    assert Builder.request([:flush, [expiration: 0x000e10, extras: 4]]) == <<
       0x80, 0x08, 0x00, 0x00,
       0x04, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x04,
@@ -188,7 +189,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request noop' do
-    assert Memcachedx.Packet.Builder.request([:noop, []]) == <<
+    assert Builder.request([:noop, []]) == <<
       0x80, 0x0a, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
@@ -199,7 +200,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request version' do
-    assert Memcachedx.Packet.Builder.request([:version, []]) == <<
+    assert Builder.request([:version, []]) == <<
       0x80, 0x0b, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x00,

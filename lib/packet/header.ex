@@ -2,6 +2,9 @@ defmodule Memcachedx.Packet.Header do
   @moduledoc """
   Builds up the header of a packet to be sent to talk with the memcached server.
   """
+
+  alias Memcachedx.Packet.Header, as: Header
+
   def magic(value) do
     case value do
       :request -> 0x80
@@ -78,6 +81,8 @@ defmodule Memcachedx.Packet.Header do
   Merges the whole header into a binary response
 
   ### Example
+  iex> opcode = :get
+  iex> options = [value: "", key: "Hello", extras: 0, cas: 0, opaque: 0]
   iex> Memcachedx.Packet.Header.merge_header(opcode, options)
   <<
       0x80, 0x00, 0x00, 0x05,
@@ -90,15 +95,15 @@ defmodule Memcachedx.Packet.Header do
   """
   def merge_header(opcode, options) do
     <<
-      Memcachedx.Packet.Header.magic(:request)                                     ,
-      Memcachedx.Packet.Header.opcode(opcode)                                      ,
-      Memcachedx.Packet.Header.key_length(options[:key])                :: [size(2), unit(8)],
-      Memcachedx.Packet.Header.extra_length(opcode)                                ,
-      Memcachedx.Packet.Header.data_type                                           ,
-      Memcachedx.Packet.Header.reserved                       :: [size(2), unit(8)],
-      Memcachedx.Packet.Header.total_body_length(options[:extras], options[:key], options[:value]):: [size(4), unit(8)],
-      Memcachedx.Packet.Header.opaque(options[:opaque])                 :: [size(4), unit(8)],
-      Memcachedx.Packet.Header.cas(options[:cas])                       :: [size(8), unit(8)],
+      magic(:request)                                     ,
+      opcode(opcode)                                      ,
+      key_length(options[:key])                :: [size(2), unit(8)],
+      extra_length(opcode)                                ,
+      data_type                                           ,
+      reserved                       :: [size(2), unit(8)],
+      total_body_length(options[:extras], options[:key], options[:value]):: [size(4), unit(8)],
+      opaque(options[:opaque])                 :: [size(4), unit(8)],
+      cas(options[:cas])                       :: [size(8), unit(8)],
     >>
   end
 end
