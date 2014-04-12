@@ -18,6 +18,11 @@ defmodule Memcachedx.Packet.Builder do
   Which is the binary needed to do the desired request to memcached.
   """
 
+  alias Memcachedx.Packet.Header, as: Header
+  alias Memcachedx.Packet.Body, as: Body
+  alias Memcachedx.Utils.Options, as: Options
+
+
   @doc """
   Builds a binary request for a get
 
@@ -28,9 +33,9 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode == :get do
-    options = Memcachedx.Utils.Options.initialize_vars(options)
+    options = Options.initialize_vars(options)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -44,9 +49,9 @@ defmodule Memcachedx.Packet.Builder do
   """
   def request([opcode, options]) when opcode in [:add, :set, :replace] do
     vars = [:flags, :expiry]
-    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+    options = Options.initialize_vars(options, vars)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -59,9 +64,9 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:delete] do
-    options = Memcachedx.Utils.Options.initialize_vars(options)
+    options = Options.initialize_vars(options)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -75,9 +80,9 @@ defmodule Memcachedx.Packet.Builder do
   """
   def request([opcode, options]) when opcode in [:incr, :decr] do
     vars = [:delta, :initial, :expiration]
-    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+    options = Options.initialize_vars(options, vars)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -90,9 +95,9 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:quit] do
-    options = Memcachedx.Utils.Options.initialize_vars(options)
+    options = Options.initialize_vars(options)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -106,9 +111,9 @@ defmodule Memcachedx.Packet.Builder do
   """
   def request([opcode, options]) when opcode in [:flush] do
     vars = [:expiration]
-    options = Memcachedx.Utils.Options.initialize_vars(options, vars)
+    options = Options.initialize_vars(options, vars)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -121,9 +126,9 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:noop] do
-    options = Memcachedx.Utils.Options.initialize_vars(options)
+    options = Options.initialize_vars(options)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 
   @doc """
@@ -136,8 +141,8 @@ defmodule Memcachedx.Packet.Builder do
   MUST NOT have value.
   """
   def request([opcode, options]) when opcode in [:version] do
-    options = Memcachedx.Utils.Options.initialize_vars(options)
+    options = Options.initialize_vars(options)
 
-    Memcachedx.Packet.Header.merge_header(opcode, options) <> Memcachedx.Packet.Body.merge_body(options)
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
 end
