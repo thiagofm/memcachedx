@@ -22,156 +22,25 @@ defmodule Memcachedx.Packet.Builder do
   alias Memcachedx.Packet.Body, as: Body
   alias Memcachedx.Utils.Options, as: Options
 
-
   @doc """
-  Builds a binary request for a get
-
-  Request:
-
-  MUST NOT have extras.
-  MUST have key.
-  MUST NOT have value.
+  Returns the necessary extra vars for the defined opcode
   """
-  def request([opcode, options]) when opcode == :get do
-    options = Options.initialize_vars(options)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
+  def extra_vars_for(opcode) do
+    case opcode do
+      opcode when opcode in [:get, :delete, :quit, :noop, :version, :append, :prepend, :stat] -> []
+      opcode when opcode in [:add, :set, :replace] -> [:flags, :expiry]
+      opcode when opcode in [:flush] -> [:expiration]
+      opcode when opcode in [:incr, :decr] -> [:delta, :initial, :expiration]
+      true -> raise Error
+    end
   end
 
   @doc """
-  Builds a binary request for an add, set or replace
-
-  Request:
-
-  MUST have extras.
-  MUST have key.
-  MAY have value.
+  Builds a binary request for a opcode
   """
-  def request([opcode, options]) when opcode in [:add, :set, :replace] do
-    vars = [:flags, :expiry]
-    options = Options.initialize_vars(options, vars)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a delete
-
-  Request:
-
-  MUST NOT have extras.
-  MUST have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:delete] do
-    options = Options.initialize_vars(options)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a incr/decr
-
-  Request:
-
-  MUST NOT have extras.
-  MUST have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:incr, :decr] do
-    vars = [:delta, :initial, :expiration]
-    options = Options.initialize_vars(options, vars)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a quit
-
-  Request:
-
-  MUST NOT have extras.
-  MUST NOT have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:quit] do
-    options = Options.initialize_vars(options)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a flush
-
-  Request:
-
-  MAY have extras.
-  MUST NOT have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:flush] do
-    vars = [:expiration]
-    options = Options.initialize_vars(options, vars)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a noop
-
-  Request:
-
-  MUST NOT have extras.
-  MUST NOT have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:noop] do
-    options = Options.initialize_vars(options)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a version
-
-  Request:
-
-  MUST NOT have extras.
-  MUST NOT have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:version] do
-    options = Options.initialize_vars(options)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a append and prepend
-
-  Request:
-
-  MUST NOT have extras.
-  MUST have key.
-  MUST have value.
-  """
-  def request([opcode, options]) when opcode in [:append, :prepend] do
-    options = Options.initialize_vars(options)
-
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
-  end
-
-  @doc """
-  Builds a binary request for a stat
-
-  Request:
-
-  MUST NOT have extras.
-  MAY have key.
-  MUST NOT have value.
-  """
-  def request([opcode, options]) when opcode in [:stat] do
-    options = Options.initialize_vars(options)
+  def request([opcode, options]) do
+    extra_vars = extra_vars_for(opcode)
+    options = Options.initialize_vars(options, extra_vars)
 
     Header.merge_header(opcode, options) <> Body.merge_body(options)
   end

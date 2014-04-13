@@ -3,6 +3,23 @@ defmodule Memcachedx.Packet.BuilderTest do
   alias Memcachedx.Packet.Builder, as: Builder
   doctest Builder
 
+  test 'extra_vars_for' do
+    assert Builder.extra_vars_for(:get) == []
+    assert Builder.extra_vars_for(:delete) == []
+    assert Builder.extra_vars_for(:quit) == []
+    assert Builder.extra_vars_for(:noop) == []
+    assert Builder.extra_vars_for(:version) == []
+    assert Builder.extra_vars_for(:append) == []
+    assert Builder.extra_vars_for(:prepend) == []
+    assert Builder.extra_vars_for(:stat) == []
+    assert Builder.extra_vars_for(:add) == [:flags, :expiry]
+    assert Builder.extra_vars_for(:set) == [:flags, :expiry]
+    assert Builder.extra_vars_for(:replace) == [:flags, :expiry]
+    assert Builder.extra_vars_for(:flush) == [:expiration]
+    assert Builder.extra_vars_for(:incr) == [:delta, :initial, :expiration]
+    assert Builder.extra_vars_for(:decr) == [:delta, :initial, :expiration]
+  end
+
   @doc """
       Byte/     0       |       1       |       2       |       3       |
          /              |               |               |               |
