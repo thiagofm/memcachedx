@@ -145,4 +145,19 @@ defmodule Memcachedx.Packet.Builder do
 
     Header.merge_header(opcode, options) <> Body.merge_body(options)
   end
+
+  @doc """
+  Builds a binary request for a append and prepend
+
+  Request:
+
+  MUST NOT have extras.
+  MUST have key.
+  MUST have value.
+  """
+  def request([opcode, options]) when opcode in [:append, :prepend] do
+    options = Options.initialize_vars(options)
+
+    Header.merge_header(opcode, options) <> Body.merge_body(options)
+  end
 end
