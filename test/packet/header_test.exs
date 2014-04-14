@@ -60,10 +60,10 @@ defmodule Memcachedx.Packet.HeaderTest do
     assert Header.cas(1)
   end
 
-  test :merge_header do
+  test :merge_req do
     opcode = :get
     options = [value: "", key: "Hello", extras: 0, cas: 0, opaque: 0]
-    assert Header.merge_header(opcode, options) == <<
+    assert Header.merge_req(opcode, options) == <<
       0x80, 0x00, 0x00, 0x05,
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x05,

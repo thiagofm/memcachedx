@@ -42,6 +42,6 @@ defmodule Memcachedx.Packet.Builder do
     extra_vars = extra_vars_for(opcode)
     options = Options.initialize_vars(options, extra_vars)
 
-    Header.merge_header(opcode, options) <> Body.merge_body(options)
+    Header.merge_req(opcode, options) <> Body.merge_req(options)
   end
 end

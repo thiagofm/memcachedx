@@ -78,12 +78,12 @@ defmodule Memcachedx.Packet.Header do
   end
 
   @doc """
-  Merges the whole header into a binary response
+  Merges the whole header into a binary request
 
   ### Example
   iex> opcode = :get
   iex> options = [value: "", key: "Hello", extras: 0, cas: 0, opaque: 0]
-  iex> Memcachedx.Packet.Header.merge_header(opcode, options)
+  iex> Memcachedx.Packet.Header.merge_req(opcode, options)
   <<
       0x80, 0x00, 0x00, 0x05,
       0x00, 0x00, 0x00, 0x00,
@@ -93,7 +93,7 @@ defmodule Memcachedx.Packet.Header do
       0x00, 0x00, 0x00, 0x00
   >>
   """
-  def merge_header(opcode, options) do
+  def merge_req(opcode, options) do
     <<
       magic(:request)                                     ,
       opcode(opcode)                                      ,

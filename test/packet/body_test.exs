@@ -3,9 +3,9 @@ defmodule Memcachedx.Packet.BodyTest do
   alias Memcachedx.Packet.Body, as: Body
   doctest Body
 
-  test 'merge_body set example' do
+  test 'merge_req set example' do
     options = [key: "Hello", value: "World", flags: 0xdeadbeef, expiry: 0x00000e10]
-    assert Body.merge_body(options) == <<
+    assert Body.merge_req(options) == <<
       0xde, 0xad, 0xbe, 0xef,
       0x00, 0x00, 0x0e, 0x10,
       0x48, 0x65, 0x6c, 0x6c,
@@ -14,25 +14,25 @@ defmodule Memcachedx.Packet.BodyTest do
     >>
   end
 
-  test 'merge_body get example' do
+  test 'merge_req get example' do
     options = [key: "Hello"]
-    assert Body.merge_body(options) == <<
+    assert Body.merge_req(options) == <<
       0x48, 0x65, 0x6c, 0x6c,
       0x6f
     >>
   end
 
-  test 'merge_body delete example' do
+  test 'merge_req delete example' do
     options = [key: "Hello"]
-    assert Body.merge_body(options) == <<
+    assert Body.merge_req(options) == <<
       0x48, 0x65, 0x6c, 0x6c,
       0x6f
     >>
   end
 
-  test 'merge_body incr/decr example' do
+  test 'merge_req incr/decr example' do
     options = [delta: 0x0000000000000001, initial: 0x0000000000000000, expiration: 0x00000e10, key: "counter"]
-    assert Body.merge_body(options) == <<
+    assert Body.merge_req(options) == <<
       0x00, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x01,
       0x00, 0x00, 0x00, 0x00,

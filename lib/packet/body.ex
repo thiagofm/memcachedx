@@ -32,16 +32,16 @@ defmodule Memcachedx.Packet.Body do
   end
 
   @doc """
-  Merges all body related options in the order that is expected from the memcached binary protocol
+  Merges all request body related options in the order that is expected from the memcached binary protocol
 
   ### Example
-  iex> Memcachedx.Packet.Body.merge_body([key: "Hello"])
+  iex> Memcachedx.Packet.Body.merge_req([key: "Hello"])
   <<
       0x48, 0x65, 0x6c, 0x6c,
       0x6f
   >>
   """
-  def merge_body(options) do
+  def merge_req(options) do
     order = [:delta, :initial, :expiration, :flags, :expiry, :key, :value]
 
     Enum.reduce(order, <<>>, fn (item, acc) ->
