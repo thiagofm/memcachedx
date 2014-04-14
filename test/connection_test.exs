@@ -28,8 +28,8 @@ defmodule Memcachedx.ConnectionTest do
     assert { :noproc, _ } = catch_exit( Memcachedx.Connection.stop(pid) )
   end
 
-  test :set do
-    #{:ok, pid} = Memcachedx.Connection.start_link([hostname: "localhost", port: 11211])
-    #assert Memcachedx.Connection.set(pid, "Hello", "World") == {:ok, :stored}
+  test :add do
+    {:ok, pid} = Memcachedx.Connection.start_link([hostname: "localhost", port: 11211])
+    assert Memcachedx.Connection.run(pid, [:add, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == {:ok, :stored}
   end
 end

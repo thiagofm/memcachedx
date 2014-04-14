@@ -43,17 +43,15 @@ defmodule Memcachedx.Connection do
     {:stop, :normal, state(s, reply_to: from) }
   end
 
-  def handle_call({:run_command, {:set, key, value}}, from, state(state: :ready, sock: sock) = s) do
-    #coll = Memcachedx.CommandBuilder.Storage.storage_command(:set, key, byte_size(value), value, "0", "0")
+  def handle_call({:run_command, cmd}, from, state(state: :ready, sock: sock) = s) do
+    el = Memcachedx.Packet.Builder.request(cmd)
 
-    #{ mod, sock } = sock
+    { mod, sock } = sock
 
-    #Enum.each(coll, fn(el) ->
-      #case mod.send(sock, el) do
-        #:ok -> :ok
-        #:error -> raise("Stuff")
-      #end
-    #end)
+    case mod.send(sock, el) do
+      :ok -> :ok
+      :error -> raise("Stuff")
+    end
 
     { :noreply, state(s, reply_to: from) }
   end
@@ -70,14 +68,10 @@ defmodule Memcachedx.Connection do
   end
 
   def handle_info({:tcp, sock, msg}, state(reply_to: to) = s) do
-    #msg = String.from_char_list!(msg)
-    #IO.inspect msg
-    
-    #parsed_msg = Memcachedx.ResponseParser.StorageCommandReply.parse(msg)
-    #IO.inspect parsed_msg
+    IO.inspect msg
 
-    #:gen_server.reply(to, {:ok, parsed_msg})
-    #{ :noreply, state }
+    :gen_server.reply(to, {:ok, :stored})
+    { :noreply, state }
   end
 
   def stop(pid) do
@@ -99,11 +93,11 @@ defmodule Memcachedx.Connection do
     end
   end
 
-  #def set(pid, key, value) do
-    #case :gen_server.call(pid, {:run_command, {:set, key, value}}) do
-      #{:ok, res} -> {:ok, res}
-    #end
-  #end
+  def run(pid, cmd) do
+    case :gen_server.call(pid, {:run_command, cmd}) do
+      {:ok, res} -> {:ok, res}
+    end
+  end
 
   def code_change(old_vsn, state, extra) do
   end
