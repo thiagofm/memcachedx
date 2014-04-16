@@ -106,22 +106,4 @@ defmodule Memcachedx.Packet.Header do
       cas(options[:cas])                       :: [size(8), unit(8)],
     >>
   end
-
-  @doc """
-  Parses the whole header into a binary request
-
-  ### Example
-  iex> res = [129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-  iex> Memcachedx.Packet.Header.parse_res(res)
-  <<
-      0x80, 0x00, 0x00, 0x05,
-      0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x05,
-      0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00
-  >>
-  """
-  def parse_res(res) do
-  end
 end
