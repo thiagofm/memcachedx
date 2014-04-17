@@ -12,7 +12,7 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def params(message) do
-    []
+    [cas: Enum.slice(message, 16, 8) |> Enum.reduce(&+/2)]
   end
 
   def response(message) do
