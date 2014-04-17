@@ -101,7 +101,7 @@ defmodule Memcachedx.Packet.Header do
       extra_length(opcode)                                ,
       data_type                                           ,
       reserved                       :: [size(2), unit(8)],
-      total_body_length(options[:extras], options[:key], options[:value]):: [size(4), unit(8)],
+      total_body_length(extra_length(opcode), options[:key], options[:value]):: [size(4), unit(8)],
       opaque(options[:opaque])                 :: [size(4), unit(8)],
       cas(options[:cas])                       :: [size(8), unit(8)],
     >>

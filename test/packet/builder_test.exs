@@ -84,7 +84,7 @@ defmodule Memcachedx.Packet.BuilderTest do
         +---------------+---------------+
   """
   test 'request add' do
-    assert Builder.request([:add, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
+    assert Builder.request([:add, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10]]) == <<
       0x80, 0x02, 0x00, 0x05,
       0x08, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x12,
@@ -100,7 +100,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request set' do
-    assert Builder.request([:set, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
+    assert Builder.request([:set, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10]]) == <<
       0x80, 0x01, 0x00, 0x05,
       0x08, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x12,
@@ -116,7 +116,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request replace' do
-    assert Builder.request([:replace, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10, extras: 8]]) == <<
+    assert Builder.request([:replace, [key: "Hello", value: "World", cas: 0, flags: 0xdeadbeef, expiry: 0x00000e10]]) == <<
       0x80, 0x03, 0x00, 0x05,
       0x08, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x12,
@@ -146,7 +146,7 @@ defmodule Memcachedx.Packet.BuilderTest do
 
   test 'request incr' do
     assert Builder.request([:incr, [key:
-        "counter", extras: 20, delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == <<
+        "counter", delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == <<
       0x80, 0x05, 0x00, 0x07,
       0x14, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x1b,
@@ -165,7 +165,7 @@ defmodule Memcachedx.Packet.BuilderTest do
 
   test 'request decr' do
     assert Builder.request([:decr, [key:
-        "counter", extras: 20, delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == <<
+        "counter", delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == <<
       0x80, 0x06, 0x00, 0x07,
       0x14, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x1b,
@@ -194,7 +194,7 @@ defmodule Memcachedx.Packet.BuilderTest do
   end
 
   test 'request flush' do
-    assert Builder.request([:flush, [expiration: 0x000e10, extras: 4]]) == <<
+    assert Builder.request([:flush, [expiration: 0x000e10]]) == <<
       0x80, 0x08, 0x00, 0x00,
       0x04, 0x00, 0x00, 0x00,
       0x00, 0x00, 0x00, 0x04,
