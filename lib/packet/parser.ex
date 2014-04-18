@@ -4,7 +4,7 @@ defmodule Memcachedx.Packet.Parser do
   based on it.
   """
   def status(message) do
-    status = Enum.at(message, 6) + Enum.at(message, 7)
+    status = slice_and_sum(message, 6, 2)
     case status do
       0 -> :ok
       _ -> :error
@@ -12,10 +12,20 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def params(message) do
-    [cas: Enum.slice(message, 16, 8) |> Enum.reduce(&+/2)]
+    params = [cas: slice_and_sum(message, 16,8)]
+
+    if slice_and_sum(message, 8, 4) > 0 do
+      params = params ++ [total_body: Enum.slice(message, 8, 4) |> Enum.reduce(&+/2)]
+    end
+
+    params
   end
 
   def response(message) do
     { status(message), params(message)}
+  end
+
+  defp slice_and_sum(message, from, to) do
+    Enum.slice(message, from, to) |> Enum.reduce(&+/2)
   end
 end

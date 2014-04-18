@@ -94,6 +94,7 @@ defmodule Memcachedx.Connection do
   def run(pid, cmd) do
     case :gen_server.call(pid, {:run_command, cmd}) do
       {:ok, res} -> {:ok, res}
+      {:error, res} -> {:error, res}
     end
   end
 
