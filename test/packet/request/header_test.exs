@@ -1,6 +1,6 @@
-defmodule Memcachedx.Packet.HeaderTest do
+defmodule Memcachedx.Packet.Request.HeaderTest do
   use ExUnit.Case
-  alias Memcachedx.Packet.Header, as: Header
+  alias Memcachedx.Packet.Request.Header, as: Header
   doctest Header
 
   test :magic do

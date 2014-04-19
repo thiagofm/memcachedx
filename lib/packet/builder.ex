@@ -18,7 +18,7 @@ defmodule Memcachedx.Packet.Builder do
   Which is the binary needed to do the desired request to memcached.
   """
 
-  alias Memcachedx.Packet.Header, as: Header
+  alias Memcachedx.Packet.Request.Header, as: Header
   alias Memcachedx.Packet.Request.Body, as: Body
   alias Memcachedx.Utils.Options, as: Options
 

@@ -1,4 +1,4 @@
-defmodule Memcachedx.Packet.BodyTest do
+defmodule Memcachedx.Packet.Request.BodyTest do
   use ExUnit.Case
   alias Memcachedx.Packet.Request.Body, as: Body
   doctest Body
