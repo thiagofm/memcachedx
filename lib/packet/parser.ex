@@ -9,9 +9,9 @@ defmodule Memcachedx.Packet.Parser do
 
   def params(message) do
     params = []
-    params = Header.cas(message, params)
     params = Header.opcode(message, params)
     params = Header.total_body(message, params)
+    params = Header.cas(message, params)
     params = Body.merge_res(message, params)
 
     params

@@ -3,6 +3,6 @@ defmodule Memcachedx.Packet.ParserTest do
   alias Memcachedx.Packet.Parser, as: Parser
 
   test 'response add' do
-    assert Parser.response([129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]) == {:ok, [cas: 1, opcode: :add]}
+    assert Parser.response([129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]) == {:ok, [opcode: :add, cas: 1]}
   end
 end
