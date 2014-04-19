@@ -1,4 +1,4 @@
-defmodule Memcachedx.Packet.Body do
+defmodule Memcachedx.Packet.Request.Body do
   @moduledoc """
   Builds up the body of a packet to be sent to talk with the memcached server.
   """
@@ -35,7 +35,7 @@ defmodule Memcachedx.Packet.Body do
   Merges all request body related options in the order that is expected from the memcached binary protocol
 
   ### Example
-  iex> Memcachedx.Packet.Body.merge_req([key: "Hello"])
+  iex> Memcachedx.Packet.Request.Body.merge_req([key: "Hello"])
   <<
       0x48, 0x65, 0x6c, 0x6c,
       0x6f

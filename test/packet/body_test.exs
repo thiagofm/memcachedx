@@ -1,6 +1,6 @@
 defmodule Memcachedx.Packet.BodyTest do
   use ExUnit.Case
-  alias Memcachedx.Packet.Body, as: Body
+  alias Memcachedx.Packet.Request.Body, as: Body
   doctest Body
 
   test 'merge_req set example' do

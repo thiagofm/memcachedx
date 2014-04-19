@@ -19,7 +19,7 @@ defmodule Memcachedx.Packet.Builder do
   """
 
   alias Memcachedx.Packet.Header, as: Header
-  alias Memcachedx.Packet.Body, as: Body
+  alias Memcachedx.Packet.Request.Body, as: Body
   alias Memcachedx.Utils.Options, as: Options
 
   @doc """
