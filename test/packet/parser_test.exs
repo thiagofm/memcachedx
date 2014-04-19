@@ -1,8 +1,8 @@
 defmodule Memcachedx.Packet.ParserTest do
   use ExUnit.Case
 
-  test 'response set' do
-    assert Memcachedx.Packet.Parser.response([129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]) == {:ok, [cas: 1]}
+  test 'response add' do
+    assert Memcachedx.Packet.Parser.response([129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]) == {:ok, [cas: 1, opcode: :add]}
   end
 
   test 'status ok' do
@@ -33,7 +33,7 @@ defmodule Memcachedx.Packet.ParserTest do
   end
 
   test :opcode do
-    assert Memcachedx.Packet.Parser.opcode([0, 0x01], []) == :set
-    assert Memcachedx.Packet.Parser.opcode([0, 0x16], []) == :decrq
+    assert Memcachedx.Packet.Parser.opcode([0, 0x01], []) == [opcode: :set]
+    assert Memcachedx.Packet.Parser.opcode([0, 0x16], []) == [opcode: :decrq]
   end
 end

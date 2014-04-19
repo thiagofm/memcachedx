@@ -16,7 +16,7 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def opcode(message, params) do
-    case Enum.at(message, 1) do
+    opcode = case Enum.at(message, 1) do
       0x00 -> :get
       0x01 -> :set
       0x02 -> :add
@@ -39,6 +39,9 @@ defmodule Memcachedx.Packet.Parser do
       0x15 -> :incrq
       0x16 -> :decrq
     end
+
+    params = params ++ [opcode: opcode]
+    params
   end
 
   def total_body(message, params) do
@@ -50,6 +53,7 @@ defmodule Memcachedx.Packet.Parser do
 
   def params(message) do
     params = [cas: slice_and_sum(message, 16,8)]
+    params = opcode(message, params)
     params = total_body(message, params)
 
     params
