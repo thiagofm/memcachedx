@@ -8,7 +8,8 @@ defmodule Memcachedx.Packet.Parser do
   alias Memcachedx.Packet.Response.Body, as: Body
 
   def params(message) do
-    params = [cas: slice_and_sum(message, 16,8)]
+    params = []
+    params = Header.cas(message, params)
     params = Header.opcode(message, params)
     params = Header.total_body(message, params)
     params = Body.merge_res(message, params)

@@ -11,6 +11,10 @@ defmodule Memcachedx.Packet.Response.Header do
     end
   end
 
+  def cas(message, params) do
+    params = params ++ [cas: slice_and_sum(message, 16,8)]
+  end
+
   def opcode(message, params) do
     opcode = case Enum.at(message, 1) do
       0x00 -> :get
