@@ -7,7 +7,18 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
   end
 
   test 'status error' do
-    assert Header.status([129, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]) == :error
+    assert Header.status([
+      129, 2, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 1]) == :error
+  end
+
+  test :opcode do
+    assert Header.opcode([0, 0x01], []) == [opcode: :set]
+    assert Header.opcode([0, 0x16], []) == [opcode: :decrq]
   end
 
   test :total_body do
@@ -24,8 +35,14 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
     ], []) == [total_body: 1]
   end
 
-  test :opcode do
-    assert Header.opcode([0, 0x01], []) == [opcode: :set]
-    assert Header.opcode([0, 0x16], []) == [opcode: :decrq]
+  test :cas do
+    assert Header.cas([
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,1
+    ], []) == [cas: 1]
   end
 end

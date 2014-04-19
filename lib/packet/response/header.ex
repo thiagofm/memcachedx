@@ -51,6 +51,13 @@ defmodule Memcachedx.Packet.Response.Header do
     params
   end
 
+  def merge_res(message, params) do
+    params = opcode(message, params)
+    params = total_body(message, params)
+    params = cas(message, params)
+    params
+  end
+
   defp slice_and_sum(message, from, to) do
     Enum.slice(message, from, to) |> Enum.reduce(&+/2)
   end
