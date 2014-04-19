@@ -20,8 +20,4 @@ defmodule Memcachedx.Packet.Parser do
   def response(message) do
     { Header.status(message), params(message)}
   end
-
-  defp slice_and_sum(message, from, to) do
-    Enum.slice(message, from, to) |> Enum.reduce(&+/2)
-  end
 end
