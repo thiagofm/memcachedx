@@ -8,7 +8,7 @@ defmodule Memcachedx.Packet.Response.BodyTest do
     ) == [value: <<0,0,0,0,0,0,0,3>>]
   end
 
-  test :body do
+  test :merge_res do
     assert Body.merge_res(
       [129, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
    0, 0, 0, 0, 0, 3], [total_body: 8, opcode: :incr]

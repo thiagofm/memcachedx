@@ -45,4 +45,18 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
       0,0,0,1
     ], []) == [cas: 1]
   end
+
+  test :merge_res do
+    assert Header.merge_res([
+      0x81,0,0,0,
+      0,0,0,0x01,
+      0,0,0,0x09,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0x4e, 0x6f, 0x74, 0x20,
+      0x66, 0x6f, 0x75, 0x6e,
+      0x64
+    ], []) == [opcode: :get, total_body: 9, cas: 0]
+  end
 end
