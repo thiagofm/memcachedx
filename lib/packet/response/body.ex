@@ -18,7 +18,7 @@ defmodule Memcachedx.Packet.Response.Body do
     params
   end
 
-  def body(message, params) do
+  def merge_res(message, params) do
     if Enum.count(message) > 24 do
       params = params ++ body_parser(Enum.slice(message, 24, params[:total_body]), params)
     end
