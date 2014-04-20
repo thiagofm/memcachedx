@@ -8,14 +8,46 @@ defmodule Memcachedx.Packet.Response.BodyTest do
     ) == [value: <<0,0,0,0,0,0,0,3>>]
   end
 
-  test :body do
+  test 'body without flags' do
+    assert Body.body([
+      0x81,0,0,0,
+      0,0,0,0x01,
+      0,0,0,0x09,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0x4e, 0x6f, 0x74, 0x20,
+      0x66, 0x6f, 0x75, 0x6e,
+      0x64
+    ], [opcode: :get, extra_length: 0, total_body: 9, cas: 0]) == [opcode: :get, extra_length: 0, total_body: 9, cas: 0, value: "Not found"]
+  end
+
+  test 'merge_res with flags' do
+    assert Body.merge_res([
+      0x81,0,0,0,
+      0,0,0,0x01,
+      0,0,0,0x09,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0xde, 0xad, 0xbe, 0xef,
+      0x4e, 0x6f, 0x74, 0x20,
+      0x66, 0x6f, 0x75, 0x6e,
+      0x64
+    ], [opcode: :get, extra_length: 4, total_body: 13, cas: 0]) == [opcode: :get, extra_length: 4, total_body: 13, cas: 0, flags: [0xde, 0xad, 0xbe, 0xef], value: "Not found"]
   end
 
   test 'merge_res incr' do
-    assert Body.merge_res(
-      [129, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
-   0, 0, 0, 0, 0, 3], [total_body: 8, extra_length: 0, opcode: :incr]
-    )
+    assert Body.merge_res([
+      129, 5, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 8,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 1,
+      0, 0, 0, 0,
+      0, 0, 0, 0], [total_body: 8, extra_length: 0, opcode: :incr]
+    ) == [total_body: 8, extra_length: 0, opcode: :incr, value: <<0, 0, 0, 0, 0, 0, 0, 0>>]
   end
 
   test 'merge_res get' do
