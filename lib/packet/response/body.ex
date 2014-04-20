@@ -42,9 +42,7 @@ defmodule Memcachedx.Packet.Response.Body do
   """
   def extra_vars_for(opcode) do
     case opcode do
-      opcode when opcode in [:incr, :decr] -> [:value]
-      opcode when opcode in [:delete] -> [:value]
-      opcode when opcode in [:get] -> [:value]
+      opcode when opcode in [:incr, :decr, :delete, :get, :version] -> [:value]
       _ -> []
     end
   end

@@ -91,4 +91,25 @@ defmodule Memcachedx.ConnectionTest do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Connection.run(pid, [:get, [key: "counter3"]]) == {:error, [opcode: :get, extra_length: 0, total_body: 9, cas: 0, value: "Not found"]}
   end
+
+  test 'quit from doc example' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Connection.run(pid, [:quit, []]) == {:ok, [opcode: :quit, extra_length: 0, cas: 0]}
+  end
+
+  test 'flush from doc example' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Connection.run(pid, [:flush, []]) == {:ok, [opcode: :flush, extra_length: 0, cas: 0]}
+  end
+
+  test 'noop from doc example' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Connection.run(pid, [:noop, []]) == {:ok, [opcode: :noop, extra_length: 0, cas: 0]}
+  end
+
+  test 'version from doc example' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    {:ok, res} = Connection.run(pid, [:version, []])
+    assert Keyword.has_key?(res, :value)
+  end
 end
