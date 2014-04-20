@@ -11,6 +11,10 @@ defmodule Memcachedx.Packet.Response.Header do
     end
   end
 
+  def extra_length(message, params) do
+    params = params ++ [extra_length: slice_and_sum(message, 4, 1)]
+  end
+
   def opcode(message, params) do
     opcode = case Enum.at(message, 1) do
       0x00 -> :get
@@ -53,6 +57,7 @@ defmodule Memcachedx.Packet.Response.Header do
 
   def merge_res(message, params) do
     params = opcode(message, params)
+    params = extra_length(message, params)
     params = total_body(message, params)
     params = cas(message, params)
     params

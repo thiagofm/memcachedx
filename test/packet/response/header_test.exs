@@ -21,6 +21,12 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
     assert Header.opcode([0, 0x16], []) == [opcode: :decrq]
   end
 
+  test :extra_length do
+    assert Header.extra_length([
+      0, 0, 0, 0,
+      0x04],[]) == [extra_length: 4]
+  end
+
   test :total_body do
     assert Header.total_body([
       0,0,0,0,
@@ -57,6 +63,6 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
       0x4e, 0x6f, 0x74, 0x20,
       0x66, 0x6f, 0x75, 0x6e,
       0x64
-    ], []) == [opcode: :get, total_body: 9, cas: 0]
+    ], []) == [opcode: :get, extra_length: 0, total_body: 9, cas: 0]
   end
 end

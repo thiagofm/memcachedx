@@ -32,6 +32,7 @@ defmodule Memcachedx.Packet.Response.Body do
     case opcode do
       opcode when opcode in [:incr, :decr] -> [:value]
       opcode when opcode in [:delete] -> [:value]
+      opcode when opcode in [:get] -> [:value]
       _ -> []
     end
   end
