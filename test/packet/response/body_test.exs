@@ -9,20 +9,22 @@ defmodule Memcachedx.Packet.Response.BodyTest do
   end
 
   test 'flags existent' do
-    assert Body.flags([
+    assert Body.flags([extra_length: 4],
+    [
       0x81,0,0,0,
-      0,0,0,0x01,
-      0,0,0,0x09,
+      0,0,0,1,
+      0,0,0,9,
       0,0,0,0,
       0,0,0,0,
       0,0,0,0,
-      0, 0, 0, 1,
-      1, 3, 3, 7
-    ], [extra_length: 4]) == [extra_length: 4, flags: [0, 0, 0, 1]]
+      0,0,0,1,
+      1,3,3,7
+    ]) == [extra_length: 4, flags: [0, 0, 0, 1]]
   end
 
   test 'no flags' do
-    assert Body.flags([
+    assert Body.flags([extra_length: 0],
+    [
       0x81,0,0,0,
       0,0,0,0x01,
       0,0,0,0x09,
@@ -31,11 +33,12 @@ defmodule Memcachedx.Packet.Response.BodyTest do
       0,0,0,0,
       0, 0, 0, 1,
       1, 3, 3, 7
-    ], [extra_length: 0]) == [extra_length: 0]
+    ]) == [extra_length: 0]
   end
 
   test 'body without flags' do
-    assert Body.body([
+    assert Body.body(
+    [opcode: :get, extra_length: 0, total_body: 9, cas: 0], [
       0x81,0,0,0,
       0,0,0,0x01,
       0,0,0,0x09,
@@ -45,7 +48,7 @@ defmodule Memcachedx.Packet.Response.BodyTest do
       0x4e, 0x6f, 0x74, 0x20,
       0x66, 0x6f, 0x75, 0x6e,
       0x64
-    ], [opcode: :get, extra_length: 0, total_body: 9, cas: 0]) == [opcode: :get, extra_length: 0, total_body: 9, cas: 0, value: "Not found"]
+    ]) == [opcode: :get, extra_length: 0, total_body: 9, cas: 0, value: "Not found"]
   end
 
   test 'merge_res with flags' do
