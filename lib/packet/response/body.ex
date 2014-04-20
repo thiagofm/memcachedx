@@ -2,17 +2,19 @@ defmodule Memcachedx.Packet.Response.Body do
   @moduledoc """
   Builds up the body of a packet to be sent to talk with the memcached server.
   """
+
+  @doc """
+  Parses the body based on opcode
+  """
   def body_parser(body, params) do
     keys = extra_vars_for(params[:opcode])
 
-    params = Enum.reduce(keys, [], fn (item, acc) ->
+    Enum.reduce(keys, [], fn (item, acc) ->
       case item do
         :value -> acc = acc ++ [value: Kernel.list_to_bitstring(Enum.slice(body, params[:extra_length], params[:total_body]))]
       end
       acc
     end)
-
-    params
   end
 
   def flags(params, message) do
