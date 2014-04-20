@@ -7,10 +7,11 @@ defmodule Memcachedx.Packet.Response.Body do
     keys = extra_vars_for(params[:opcode])
     size = Enum.count(keys)
     total_body = params[:total_body]
+    extra_length = params[:extra_length]
 
     params = Enum.reduce(keys, [], fn (item, acc) ->
       case item do
-        :value -> acc = acc ++ [value: Kernel.list_to_bitstring(Enum.slice(body, 0, total_body))]
+        :value -> acc = acc ++ [value: Kernel.list_to_bitstring(Enum.slice(body, extra_length, total_body))]
       end
       acc
     end)
