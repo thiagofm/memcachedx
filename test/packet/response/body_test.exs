@@ -8,6 +8,32 @@ defmodule Memcachedx.Packet.Response.BodyTest do
     ) == [value: <<0,0,0,0,0,0,0,3>>]
   end
 
+  test 'flags existent' do
+    assert Body.flags([
+      0x81,0,0,0,
+      0,0,0,0x01,
+      0,0,0,0x09,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0, 0, 0, 1,
+      1, 3, 3, 7
+    ], [extra_length: 4]) == [extra_length: 4, flags: [0, 0, 0, 1]]
+  end
+
+  test 'no flags' do
+    assert Body.flags([
+      0x81,0,0,0,
+      0,0,0,0x01,
+      0,0,0,0x09,
+      0,0,0,0,
+      0,0,0,0,
+      0,0,0,0,
+      0, 0, 0, 1,
+      1, 3, 3, 7
+    ], [extra_length: 0]) == [extra_length: 0]
+  end
+
   test 'body without flags' do
     assert Body.body([
       0x81,0,0,0,
