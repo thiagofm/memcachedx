@@ -8,11 +8,7 @@ defmodule Memcachedx.Packet.Parser do
   alias Memcachedx.Packet.Response.Body, as: Body
 
   def params(message) do
-    params = []
-    params = Header.merge_res(message, params)
-    params = Body.merge_res(message, params)
-
-    params
+    Header.merge_res(message, []) |> Body.merge_res(message)
   end
 
   def response(message) do
