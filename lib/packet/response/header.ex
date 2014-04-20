@@ -11,11 +11,11 @@ defmodule Memcachedx.Packet.Response.Header do
     end
   end
 
-  def extra_length(message, params) do
-    params = params ++ [extra_length: slice_and_sum(message, 4, 1)]
+  def extra_length(params, message) do
+    params ++ [extra_length: slice_and_sum(message, 4, 1)]
   end
 
-  def opcode(message, params) do
+  def opcode(params, message) do
     opcode = case Enum.at(message, 1) do
       0x00 -> :get
       0x01 -> :set
@@ -40,27 +40,26 @@ defmodule Memcachedx.Packet.Response.Header do
       0x16 -> :decrq
     end
 
-    params = params ++ [opcode: opcode]
-    params
+    params ++ [opcode: opcode]
   end
 
-  def total_body(message, params) do
+  def total_body(params, message) do
     if slice_and_sum(message, 8, 4) > 0 do
       params = params ++ [total_body: Enum.slice(message, 8, 4) |> Enum.reduce(&+/2)]
     end
+
     params
   end
 
-  def cas(message, params) do
-    params = params ++ [cas: slice_and_sum(message, 16,8)]
+  def cas(params, message) do
+    params ++ [cas: slice_and_sum(message, 16,8)]
   end
 
   def merge_res(message, params) do
-    params = opcode(message, params)
-    params = extra_length(message, params)
-    params = total_body(message, params)
-    params = cas(message, params)
-    params
+    params |> opcode(message) |>
+              extra_length(message) |>
+              total_body(message) |>
+              cas(message)
   end
 
   defp slice_and_sum(message, from, to) do

@@ -17,39 +17,40 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
   end
 
   test :opcode do
-    assert Header.opcode([0, 0x01], []) == [opcode: :set]
-    assert Header.opcode([0, 0x16], []) == [opcode: :decrq]
+    assert Header.opcode([], [0, 0x01]) == [opcode: :set]
+    assert Header.opcode([], [0, 0x16]) == [opcode: :decrq]
   end
 
   test :extra_length do
-    assert Header.extra_length([
-      0, 0, 0, 0,
-      0x04],[]) == [extra_length: 4]
+    assert Header.extra_length([],
+    [0, 0, 0, 0, 0x04]) == [extra_length: 4]
   end
 
   test :total_body do
-    assert Header.total_body([
+    assert Header.total_body([],
+    [
       0,0,0,0,
       0,0,0,0,
       0,0,0,0
-    ], []) == []
+    ]) == []
 
-    assert Header.total_body([
+    assert Header.total_body([],
+    [
       0,0,0,0,
       0,0,0,0,
       0,0,0,1
-    ], []) == [total_body: 1]
+    ]) == [total_body: 1]
   end
 
   test :cas do
-    assert Header.cas([
+    assert Header.cas([], [
       0,0,0,0,
       0,0,0,0,
       0,0,0,0,
       0,0,0,0,
       0,0,0,0,
       0,0,0,1
-    ], []) == [cas: 1]
+    ]) == [cas: 1]
   end
 
   test :merge_res do
