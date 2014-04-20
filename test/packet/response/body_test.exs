@@ -8,6 +8,9 @@ defmodule Memcachedx.Packet.Response.BodyTest do
     ) == [value: <<0,0,0,0,0,0,0,3>>]
   end
 
+  test :body do
+  end
+
   test 'merge_res incr' do
     assert Body.merge_res(
       [129, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
@@ -40,7 +43,7 @@ defmodule Memcachedx.Packet.Response.BodyTest do
       0xde, 0xad, 0xbe, 0xef,
       0x57, 0x6f, 0x72, 0x6c,
       0x64
-    ], [opcode: :get, extra_length: 4, total_body: 9, flags: 0xdeadbeef]) == [opcode: :get, extra_length: 4, total_body: 9, cas: 0, value: "World"]
+    ], [opcode: :get, extra_length: 4, total_body: 9]) == [opcode: :get, extra_length: 4, total_body: 9, flags: [0xde, 0xad, 0xbe, 0xef], value: "World"]
   end
 
   test :extra_vars_for do

@@ -77,7 +77,7 @@ defmodule Memcachedx.ConnectionTest do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", flags: 0, expiry: 0]])
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    #assert Connection.run(pid, [:get, [key: "Hello"]]) == {:ok, [opcode: :get, total_body: 9, cas: 1, value: "World"]}
+    assert Connection.run(pid, [:get, [key: "Hello"]]) == {:ok, [opcode: :get, extra_length: 4, total_body: 9, cas: 1, flags: [0, 0, 0, 0], value: "World"]}
   end
 
   test 'get fail from doc example' do
