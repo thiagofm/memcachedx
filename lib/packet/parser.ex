@@ -12,6 +12,8 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def response(message) do
+    message  = :erlang.binary_to_list(message)
+
     status   = Header.status(message)
     params   = params(message)
     response = {status, params}
