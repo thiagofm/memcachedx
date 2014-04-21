@@ -113,10 +113,14 @@ defmodule Memcachedx.ConnectionTest do
     assert Keyword.has_key?(res, :value)
   end
 
-  #test 'stat from doc example' do
-    #IO.inspect 'x ini'
-    #{:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    #Connection.run(pid, [:stat, []])
-    #IO.inspect 'x fim'
-  #end
+  test 'stat from doc example(composite/multiple response)' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    whole_response = Connection.run(pid, [:stat, []])
+
+    assert Enum.count(whole_response) == 39
+
+    {status, response} = Enum.at(whole_response, 0)
+    assert status == :ok
+    assert response[:key] == "pid"
+  end
 end
