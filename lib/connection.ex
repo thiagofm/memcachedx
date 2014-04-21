@@ -69,6 +69,7 @@ defmodule Memcachedx.Connection do
 
   def handle_info({:tcp, sock, msg}, state(reply_to: to) = s) do
     :gen_server.reply(to, Memcachedx.Packet.Parser.response(msg))
+
     { :noreply, state }
   end
 

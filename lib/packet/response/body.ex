@@ -8,10 +8,12 @@ defmodule Memcachedx.Packet.Response.Body do
   """
   def body_parser(body, params) do
     keys = extra_vars_for(params[:opcode])
+    key_length = params[:key_length] || 0
 
     Enum.reduce(keys, [], fn (item, acc) ->
       case item do
-        :value -> acc = acc ++ [value: Kernel.list_to_bitstring(Enum.slice(body, params[:extra_length], params[:total_body]))]
+        :key -> acc = acc ++ [key: Kernel.list_to_bitstring(Enum.slice(body, 0, params[:key_length]))]
+        :value -> acc = acc ++ [value: Kernel.list_to_bitstring(Enum.slice(body, key_length + params[:extra_length], params[:total_body]))]
       end
       acc
     end)
@@ -43,6 +45,7 @@ defmodule Memcachedx.Packet.Response.Body do
   def extra_vars_for(opcode) do
     case opcode do
       opcode when opcode in [:incr, :decr, :delete, :get, :version] -> [:value]
+      opcode when opcode in [:stat] -> [:key, :value]
       _ -> []
     end
   end

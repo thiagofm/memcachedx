@@ -32,7 +32,7 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
       0,0,0,0,
       0,0,0,0,
       0,0,0,0
-    ]) == []
+    ]) == [total_body: 0]
 
     assert Header.total_body([],
     [
@@ -64,6 +64,6 @@ defmodule Memcachedx.Packet.Response.HeaderTest do
       0x4e, 0x6f, 0x74, 0x20,
       0x66, 0x6f, 0x75, 0x6e,
       0x64
-    ], []) == [opcode: :get, extra_length: 0, total_body: 9, cas: 0]
+    ], []) == [opcode: :get, key_length: 0, extra_length: 0, total_body: 9, cas: 0]
   end
 end
