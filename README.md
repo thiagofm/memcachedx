@@ -6,6 +6,8 @@ free to help or to get in touch.
 ## Roadmap
 
 - Connection pools
+- Rewrite parser to use directly binary instead of converting it to a
+  list
 
 ## Usage
 
