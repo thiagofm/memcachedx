@@ -52,9 +52,6 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
-  @doc """
-  Offsets the current message by the amount of bytes it has already proccessed.
-  """
   defp offset_message(message, params) do
     Enum.slice(message, (24 + params[:total_body]..-1))
   end
