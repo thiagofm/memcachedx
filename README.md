@@ -11,7 +11,10 @@ free to help or to get in touch.
 
 ## Usage
 
-Work in progress
+### For single connections:
+Read https://github.com/thiagofm/memcachedx/blob/master/test/connection_test.exs
+
+### With a connection pool:
 
 ## Generating docs
 

@@ -18,6 +18,9 @@ defmodule Memcachedx.Mixfile do
   # To specify particular versions, regardless of the tag, do:
   # { :barbat, "~> 0.1", github: "elixir-lang/barbat" }
   defp deps do
-    [{:ex_doc, github: "elixir-lang/ex_doc"}]
+    [
+      {:ex_doc, github: "elixir-lang/ex_doc"},
+      {:poolboy, "~> 1.1.0", github: "devinus/poolboy"}
+    ]
   end
 end
