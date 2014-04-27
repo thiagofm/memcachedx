@@ -48,6 +48,19 @@ defmodule Memcachedx.Packet.ParserTest do
     assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == [{:ok, [opcode: :add, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 1, extras: 0, key: "", value: ""]}]
   end
 
+  test 'response get doc' do
+    assert Parser.response(<<
+      129, 0, 0, 0,
+      4, 0, 0, 0,
+      0, 0, 0, 9,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 1,
+      0, 0, 0, 0,
+      87, 111, 114, 108,
+      100>>) == [{:ok, [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: 0, key: "", value: "World"]}]
+  end
+
   test 'response noop' do
     assert Parser.response(<<
       129, 16, 0, 10,
