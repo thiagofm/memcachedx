@@ -11,14 +11,20 @@ defmodule Memcachedx.Packet.ParserTest do
     >>) == [opcode: :get, extras_length: 0, key_length: 0, total_body_length: 9, cas: 0, value: "Not found"]
   end
 
+  test 'body - no body' do
+    assert Parser.body(
+    [opcode: :get, extras_length: 0, key_length: 0, total_body_length: 0, cas: 0], <<
+    >>) == [opcode: :get, extras_length: 0, key_length: 0, total_body_length: 0, cas: 0]
+  end
+
   test 'body with extras - key and value found' do
     assert Parser.body(
-    [opcode: :get, key_length: 5, extras_length: 4, total_body_length: 9, cas: 0], <<
+    [opcode: :getk, key_length: 5, extras_length: 4, total_body_length: 9, cas: 0], <<
       0xde, 0xad, 0xbe, 0xef,
       0x48, 0x65, 0x6c, 0x6c,
       0x6f, 0x57, 0x6f, 0x72,
       0x6c, 0x64
-    >>) == [opcode: :get, key_length: 5, extras_length: 4, total_body_length: 9, cas: 0, extras: 3735928559, key: "Hello", value: "World"]
+    >>) == [opcode: :getk, key_length: 5, extras_length: 4, total_body_length: 9, cas: 0, extras: 3735928559, key: "Hello", value: "World"]
   end
 
   test 'body - key and value found' do
@@ -55,17 +61,18 @@ defmodule Memcachedx.Packet.ParserTest do
           key_length: 0, extras_length: 0,
           total_body_length: 0,
           opaque: 0,
-          cas: 1
+          cas: 1,
+          extras: 0
         ]
       }
   end
 
   test 'response single new' do
-    assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == {:ok, [opcode: :add, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 1]}
+    assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == {:ok, [opcode: :add, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 1, extras: 0]}
   end
 
   test 'response single' do
-    assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == {:ok, [opcode: :add, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 1]}
+    assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == {:ok, [opcode: :add, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 1, extras: 0]}
   end
 
   test 'response multiple' do

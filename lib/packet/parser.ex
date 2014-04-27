@@ -72,6 +72,12 @@ defmodule Memcachedx.Packet.Parser do
       rest :: binary
     >> = message
 
+    <<
+      extras :: [size(extras_length), unit(8)],
+      body :: [size(total_body_length), unit(8)],
+      rest :: binary
+    >> = rest
+
     # status
     if status == 0 do
       status = :ok
@@ -85,8 +91,9 @@ defmodule Memcachedx.Packet.Parser do
       extras_length: extras_length,
       total_body_length: total_body_length,
       opaque: opaque,
-      cas: cas
-    ] |> body(rest)
+      cas: cas,
+      extras: extras
+    ] |> body(body)
 
     {status, arr}
   end
