@@ -7,23 +7,26 @@ defmodule Memcachedx.Packet.Parser do
   alias Memcachedx.Packet.Response.Header, as: Header
   alias Memcachedx.Packet.Response.Body, as: Body
 
-  def body(params, body) do
+  def body(params, rest) do
     # flags
-    extras_offset = 0
     if params[:extras_length] > 0 do
-      params = params ++ [extras: String.slice(body, 0, params[:extras_length] - 1)]
-      extras_offset = 1
+      extras_length = params[:extras_length]
+      <<
+        extras :: [size(extras_length), unit(8)],
+        rest :: binary
+      >> = rest
+      params = params ++ [extras: extras]
     end
 
     # key
     if params[:key_length] > 0 do
-      params = params ++ [key: String.slice(body, params[:extras_length] - extras_offset, params[:key_length])]
+      params = params ++ [key: String.slice(rest, 0, params[:key_length])]
     end
 
     # value
     value = params[:total_body_length] - params[:key_length]
     if value > 0 do
-      params = params ++ [value: String.slice(body, params[:key_length] + params[:extras_length] - extras_offset, value + 1)]
+      params = params ++ [value: String.slice(rest, params[:key_length], value + 1)]
     end
 
     params
@@ -55,7 +58,7 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
-  def res_header(message) do
+  def response(message) do
     <<
       magic :: [size(1), unit(8)],
       opcode :: [size(1), unit(8)],
@@ -86,58 +89,5 @@ defmodule Memcachedx.Packet.Parser do
     ] |> body(rest)
 
     {status, arr}
-  end
-
-  def params(message) do
-    Header.merge_res(message, []) |> Body.merge_res(message)
-  end
-
-  def response(message) do
-    message  = :erlang.binary_to_list(message)
-
-    status   = Header.status(message)
-    params   = params(message)
-    response = {status, params}
-
-    if composite_response?(message, params) do
-      Enum.reverse(recursively_parse_response(offset_message(message, params), params, [response]))
-    else
-      response
-    end
-  end
-
-  @doc """
-  Recursively parses response adding all responses up in the acc variable.
-  This happens because some opcodes rely on more than one response like
-  the stat command.
-
-  The stat command, for instance, returns each key and value in a separate
-  response, so we need to deal with it and build a list of responses.
-
-  The acc is started with the first parsed response from the "response"
-  function call.
-  """
-  def recursively_parse_response(message, params, acc) do
-    if composite_response?(message, params) do
-      status   = Header.status(message)
-      params   = params(message)
-      response = {status, params}
-
-      recursively_parse_response(
-        offset_message(message, params),
-        params,
-        [response] ++ acc
-      )
-    else
-      acc
-    end
-  end
-
-  defp offset_message(message, params) do
-    Enum.slice(message, (24 + params[:total_body]..-1))
-  end
-
-  defp composite_response?(message, params) do
-    Enum.count(message) > 24 + params[:total_body]
   end
 end

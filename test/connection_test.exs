@@ -66,45 +66,45 @@ defmodule Memcachedx.ConnectionTest do
     Connection.run(pid, [:set, [key: "counter", value: "1", flags: 0, expiry: 0]])
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Connection.run(pid, [:incr, [key: "counter", delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == {:ok, [opcode: :incr, key_length: 0, extra_length: 0, total_body: 8, cas: 2, value: <<0, 0, 0, 0, 0, 0, 0, 2>>]}
-  end
+    end
 
   test 'incr when key doesn\'t exist' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:incr, [key: "counter3", delta: 0x01, initial: 0x03, expiration: 0x00000e10]]) == {:ok, [opcode: :incr, key_length: 0, extra_length: 0, total_body: 8, cas: 1, value: <<0, 0, 0, 0, 0, 0, 0, 3>>]}
+    assert Connection.run(pid, [:incr, [key: "counter3", delta: 0x01, initial: 0x03, expiration: 0x00000e10]]) == {:ok, [opcode: :incr, key_length: 0, extras_length: 0, total_body: 8, cas: 1, opaque: 0, value: <<0, 0, 0, 0, 0, 0, 0, 3>>]}
   end
 
   test 'get doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", flags: 0, expiry: 0]])
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:get, [key: "Hello"]]) == {:ok, [opcode: :get, key_length: 0, extra_length: 4, total_body: 9, cas: 1, flags: [0, 0, 0, 0], value: "World"]}
+    assert Connection.run(pid, [:get, [key: "Hello"]]) == {:ok, [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, cas: 1, opaque: 0, flags: <<0, 0, 0, 0>>, value: "World"]}
   end
 
   test 'get no defined flags' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", expiry: 0]])
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:get, [key: "Hello"]]) == {:ok, [opcode: :get, key_length: 0, extra_length: 4, total_body: 9, cas: 1, flags: [0, 0, 0, 0], value: "World"]}
+    assert Connection.run(pid, [:get, [key: "Hello"]]) == {:ok, [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: <<0, 0, 0, 0>>, value: "World"]}
   end
 
   test 'get fail from doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:get, [key: "counter3"]]) == {:error, [opcode: :get, key_length: 0, extra_length: 0, total_body: 9, cas: 0, value: "Not found"]}
+    assert Connection.run(pid, [:get, [key: "counter3"]]) == {:error, [opcode: :get, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, value: "Not found"]}
   end
 
   test 'quit from doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:quit, []]) == {:ok, [opcode: :quit, key_length: 0, extra_length: 0, total_body: 0, cas: 0]}
+    assert Connection.run(pid, [:quit, []]) == {:ok, [opcode: :quit, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 0]}
   end
 
   test 'flush from doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:flush, []]) == {:ok, [opcode: :flush, key_length: 0, extra_length: 0, total_body: 0, cas: 0]}
+    assert Connection.run(pid, [:flush, []]) == {:ok, [opcode: :flush, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 0]}
   end
 
   test 'noop from doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:noop, []]) == {:ok, [opcode: :noop, key_length: 0, extra_length: 0, total_body: 0, cas: 0]}
+    assert Connection.run(pid, [:noop, []]) == {:ok, [opcode: :noop, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 0]}
   end
 
   test 'version from doc example' do

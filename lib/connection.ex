@@ -68,6 +68,7 @@ defmodule Memcachedx.Connection do
   end
 
   def handle_info({:tcp, sock, msg}, state(reply_to: to) = s) do
+    IO.inspect msg, limit: :infinity
     :gen_server.reply(to, Memcachedx.Packet.Parser.response(msg))
 
     { :noreply, state }
