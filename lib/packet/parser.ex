@@ -85,9 +85,10 @@ defmodule Memcachedx.Packet.Parser do
         rest :: binary
       >> = rest
 
+      body_length = total_body_length - extras_length
       <<
         extras :: [size(extras_length), unit(8)],
-        body :: [binary, size(total_body_length)],
+        body :: [binary, size(body_length)],
         rest :: binary
       >> = rest
 
