@@ -7,27 +7,35 @@ defmodule Memcachedx.Packet.Parser do
   alias Memcachedx.Packet.Response.Header, as: Header
   alias Memcachedx.Packet.Response.Body, as: Body
 
-  def body(params, rest) do
-    # flags
-    if params[:extras_length] > 0 do
-      extras_length = params[:extras_length]
+  def body(params, body) do
+    key_length = params[:key_length]
+    value_length = params[:total_body_length] - params[:key_length] - params[:extras_length]
+
+    # Solves problem with getk/getkq having the wrong total_body_length as the
+    # total_body_length should be (extras_length + key_length + value_length)
+    if params[:opcode] == :getk do
+      value_length = params[:total_body_length] - params[:extras_length]
+    end
+
+    if key_length > 0 do
       <<
-        extras :: [size(extras_length), unit(8)],
-        rest :: binary
-      >> = rest
-      params = params ++ [extras: extras]
+        key :: [binary, size(key_length)],
+        body :: binary
+      >> = body
+    else
+      key = ""
     end
 
-    # key
-    if params[:key_length] > 0 do
-      params = params ++ [key: String.slice(rest, 0, params[:key_length])]
+    if value_length > 0 do
+      <<
+        value :: [binary, size(value_length)],
+        body :: binary
+      >> = body
+    else
+      value = ""
     end
 
-    # value
-    value = params[:total_body_length] - params[:key_length]
-    if value > 0 do
-      params = params ++ [value: String.slice(rest, params[:key_length], value + 1)]
-    end
+    params = params ++ [key: key, value: value]
 
     params
   end
@@ -58,7 +66,7 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
-  def response(message) do
+  def recur_response(message, acc) do
     <<
       magic :: [size(1), unit(8)],
       opcode :: [size(1), unit(8)],
@@ -66,17 +74,39 @@ defmodule Memcachedx.Packet.Parser do
       extras_length :: [size(1), unit(8)],
       data_type :: [size(1), unit(8)],
       status :: [size(2), unit(8)],
-      total_body_length :: [size(4), unit(8)],
-      opaque :: [size(4), unit(8)],
-      cas :: [size(8), unit(8)],
       rest :: binary
     >> = message
 
-    <<
-      extras :: [size(extras_length), unit(8)],
-      body :: [size(total_body_length), unit(8)],
-      rest :: binary
-    >> = rest
+    if Kernel.byte_size(rest) > 0 do
+      <<
+        total_body_length :: [size(4), unit(8)],
+        opaque :: [size(4), unit(8)],
+        cas :: [size(8), unit(8)],
+        rest :: binary
+      >> = rest
+
+      <<
+        extras :: [size(extras_length), unit(8)],
+        body :: [binary, size(total_body_length)],
+        rest :: binary
+      >> = rest
+
+      params = [
+        opcode: opcode(opcode),
+        key_length: key_length,
+        extras_length: extras_length,
+        total_body_length: total_body_length,
+        opaque: opaque,
+        cas: cas,
+        extras: extras
+      ] |> body(body)
+    else
+      params = [
+        opcode: opcode(opcode),
+        key_length: key_length,
+        extras_length: extras_length,
+      ]
+    end
 
     # status
     if status == 0 do
@@ -85,16 +115,66 @@ defmodule Memcachedx.Packet.Parser do
       status = :error
     end
 
-    arr = [
-      opcode: opcode(opcode),
-      key_length: key_length,
-      extras_length: extras_length,
-      total_body_length: total_body_length,
-      opaque: opaque,
-      cas: cas,
-      extras: extras
-    ] |> body(body)
+    if Kernel.byte_size(rest) > 0 do
+      recur_response(rest, acc ++ [{status, params}])
+    else
+      acc
+    end
+  end
 
-    {status, arr}
+  def response(message) do
+    <<
+      magic :: [size(1), unit(8)],
+      opcode :: [size(1), unit(8)],
+      key_length :: [size(2), unit(8)],
+      extras_length :: [size(1), unit(8)],
+      data_type :: [size(1), unit(8)],
+      status :: [size(2), unit(8)],
+      rest :: binary
+    >> = message
+
+    if Kernel.byte_size(rest) > 0 do
+      <<
+        total_body_length :: [size(4), unit(8)],
+        opaque :: [size(4), unit(8)],
+        cas :: [size(8), unit(8)],
+        rest :: binary
+      >> = rest
+
+      <<
+        extras :: [size(extras_length), unit(8)],
+        body :: [binary, size(total_body_length)],
+        rest :: binary
+      >> = rest
+
+      params = [
+        opcode: opcode(opcode),
+        key_length: key_length,
+        extras_length: extras_length,
+        total_body_length: total_body_length,
+        opaque: opaque,
+        cas: cas,
+        extras: extras
+      ] |> body(body)
+    else
+      params = [
+        opcode: opcode(opcode),
+        key_length: key_length,
+        extras_length: extras_length,
+      ]
+    end
+
+    # status
+    if status == 0 do
+      status = :ok
+    else
+      status = :error
+    end
+
+    if Kernel.byte_size(rest) > 0 do
+      recur_response(rest, [{status, params}])
+    else
+      [{status, params}]
+    end
   end
 end
