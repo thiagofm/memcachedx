@@ -31,8 +31,12 @@ port `11211`.
 
     mix test
 
+### Dedication
+
+I dedicate this project to [ericmj](http://www.github.com/ericmj) for his patience in teaching me elixir!
+
 ### Making a pull request?
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.

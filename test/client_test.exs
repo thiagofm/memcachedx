@@ -1,6 +1,6 @@
 defmodule Memcachedx.ClientTest do
   use ExUnit.Case
-  alias Memcachedx.Client, as: Client
+  #alias Memcachedx.Client, as: Client
 
   test :example do
     #tree = [ worker(Repo, []) ]

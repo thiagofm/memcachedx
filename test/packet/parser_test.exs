@@ -2,8 +2,58 @@ defmodule Memcachedx.Packet.ParserTest do
   use ExUnit.Case
   alias Memcachedx.Packet.Parser, as: Parser
 
+  test 'body - value not found' do
+    assert Parser.body(
+    [opcode: :get, extras_length: 0, key_length: 0, total_body_length: 9, cas: 0], <<
+      0x4e, 0x6f, 0x74, 0x20,
+      0x66, 0x6f, 0x75, 0x6e,
+      0x64
+    >>) == [opcode: :get, extras_length: 0, key_length: 0, total_body_length: 9, cas: 0, value: "Not found"]
+  end
+
+  test 'body with flags - key and value found' do
+    assert Parser.body(
+    [opcode: :get, extras_length: 4, key_length: 5, total_body_length: 9, cas: 0], <<
+      0xde, 0xad, 0xbe, 0xef,
+      0x48, 0x65, 0x6c, 0x6c,
+      0x6f, 0x57, 0x6f, 0x72,
+      0x6c, 0x64
+    >>) == [opcode: :get, extras_length: 4, key_length: 5, total_body_length: 9, cas: 0, extras: <<0xde, 0xad, 0xbe, 0xef>>, key: "Hello", value: "World"]
+  end
+
+  test 'body - key and value found' do
+    assert Parser.body(
+    [opcode: :get, extras_length: 0, key_length: 5, total_body_length: 9, cas: 0], <<
+      0x48, 0x65, 0x6c, 0x6c,
+      0x6f, 0x57, 0x6f, 0x72,
+      0x6c, 0x64
+    >>) == [opcode: :get, extras_length: 0, key_length: 5, total_body_length: 9, cas: 0, key: "Hello", value: "World"]
+  end
+
+  test :res do
+    assert Parser.res_header(
+      <<
+        129, 2, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 1
+      >>) == {
+        :ok,
+        [
+          opcode: :add,
+          key_length: 0,
+          extras_length: 0,
+          total_body_length: 0,
+          opaque: 0,
+          cas: 1
+        ]
+      }
+  end
+
   test 'response single' do
-    assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == {:ok, [opcode: :add, key_length: 0, extra_length: 0, total_body: 0, cas: 1]}
+      assert Parser.response(<<129, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>>) == {:ok, [opcode: :add, key_length: 0, extra_length: 0, total_body: 0, cas: 1]}
   end
 
   test 'response multiple' do
