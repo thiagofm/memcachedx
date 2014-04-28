@@ -116,67 +116,15 @@ defmodule Memcachedx.Packet.Parser do
       status = :error
     end
 
+    result = [{status, params}] ++ acc
     if Kernel.byte_size(rest) > 0 do
-      recur_response(rest, acc ++ [{status, params}])
-    else
-      acc
+      result = recur_response(rest, result)
     end
+
+    result
   end
 
   def response(message) do
-    <<
-      magic :: [size(1), unit(8)],
-      opcode :: [size(1), unit(8)],
-      key_length :: [size(2), unit(8)],
-      extras_length :: [size(1), unit(8)],
-      data_type :: [size(1), unit(8)],
-      status :: [size(2), unit(8)],
-      rest :: binary
-    >> = message
-
-    if Kernel.byte_size(rest) > 0 do
-      <<
-        total_body_length :: [size(4), unit(8)],
-        opaque :: [size(4), unit(8)],
-        cas :: [size(8), unit(8)],
-        rest :: binary
-      >> = rest
-
-      body_length = total_body_length - extras_length
-      <<
-        extras :: [size(extras_length), unit(8)],
-        body :: [binary, size(body_length)],
-        rest :: binary
-      >> = rest
-
-      params = [
-        opcode: opcode(opcode),
-        key_length: key_length,
-        extras_length: extras_length,
-        total_body_length: total_body_length,
-        opaque: opaque,
-        cas: cas,
-        extras: extras
-      ] |> body(body)
-    else
-      params = [
-        opcode: opcode(opcode),
-        key_length: key_length,
-        extras_length: extras_length,
-      ]
-    end
-
-    # status
-    if status == 0 do
-      status = :ok
-    else
-      status = :error
-    end
-
-    if Kernel.byte_size(rest) > 0 do
-      recur_response(rest, [{status, params}])
-    else
-      [{status, params}]
-    end
+    Enum.reverse(recur_response(message, []))
   end
 end
