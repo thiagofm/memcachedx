@@ -66,7 +66,7 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
-  def recur_response(message, acc) do
+  def recur_response(
     <<
       magic :: [size(1), unit(8)],
       opcode :: [size(1), unit(8)],
@@ -75,7 +75,9 @@ defmodule Memcachedx.Packet.Parser do
       data_type :: [size(1), unit(8)],
       status :: [size(2), unit(8)],
       rest :: binary
-    >> = message
+    >> = message,
+    acc
+  ) do
 
     if Kernel.byte_size(rest) > 0 do
       <<
@@ -117,6 +119,7 @@ defmodule Memcachedx.Packet.Parser do
     end
 
     result = [{status, params}] ++ acc
+
     if Kernel.byte_size(rest) > 0 do
       result = recur_response(rest, result)
     end
