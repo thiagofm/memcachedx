@@ -84,7 +84,7 @@ defmodule Memcachedx.Packet.Parser do
       ], status, rest}
   end
 
-  def header_bottom(params,
+  def header_middle(params,
      <<
       total_body_length :: [size(4), unit(8)],
       opaque :: [size(4), unit(8)],
@@ -101,23 +101,28 @@ defmodule Memcachedx.Packet.Parser do
     ], rest }
   end
 
+  def header_bottom(params, message) do
+    extras_length = params[:extras_length]
+    body_length = params[:total_body_length] - extras_length
+    <<
+      extras :: [size(extras_length), unit(8)],
+      body :: [binary, size(body_length)],
+      rest :: binary
+    >> = message
+
+    {
+      params ++ [ extras: extras ],
+      body,
+      rest
+    }
+  end
+
   def recur_response(message, acc) do
     {params, status, rest} = header_top(message)
 
     if Kernel.byte_size(rest) > 0 do
-      {params, rest} = header_bottom(params, rest)
-
-      extras_length = params[:extras_length]
-      body_length = params[:total_body_length] - extras_length
-      <<
-        extras :: [size(extras_length), unit(8)],
-        body :: [binary, size(body_length)],
-        rest :: binary
-      >> = rest
-
-      params = params ++ [
-        extras: extras
-      ]
+      {params, rest} = header_middle(params, rest)
+      {params, body, rest} = header_bottom(params, rest)
 
       params = params |> body(body)
     end
