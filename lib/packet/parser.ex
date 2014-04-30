@@ -66,7 +66,7 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
-  def recur_response(
+  def header(
     <<
       magic :: [size(1), unit(8)],
       opcode :: [size(1), unit(8)],
@@ -75,15 +75,17 @@ defmodule Memcachedx.Packet.Parser do
       data_type :: [size(1), unit(8)],
       status :: [size(2), unit(8)],
       rest :: binary
-    >> = message,
-    acc
+    >> = message
   ) do
-
-    params = [
+    {[
       opcode: opcode(opcode),
       key_length: key_length,
       extras_length: extras_length,
-    ]
+      ], status, rest}
+  end
+
+  def recur_response(message, acc) do
+    {params, status, rest} = header(message)
 
     if Kernel.byte_size(rest) > 0 do
       <<
@@ -93,7 +95,8 @@ defmodule Memcachedx.Packet.Parser do
         rest :: binary
       >> = rest
 
-      body_length = total_body_length - extras_length
+      body_length = total_body_length - params[:extras_length]
+      extras_length = params[:extras_length]
       <<
         extras :: [size(extras_length), unit(8)],
         body :: [binary, size(body_length)],
