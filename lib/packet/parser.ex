@@ -79,6 +79,12 @@ defmodule Memcachedx.Packet.Parser do
     acc
   ) do
 
+    params = [
+      opcode: opcode(opcode),
+      key_length: key_length,
+      extras_length: extras_length,
+    ]
+
     if Kernel.byte_size(rest) > 0 do
       <<
         total_body_length :: [size(4), unit(8)],
@@ -94,21 +100,14 @@ defmodule Memcachedx.Packet.Parser do
         rest :: binary
       >> = rest
 
-      params = [
-        opcode: opcode(opcode),
-        key_length: key_length,
-        extras_length: extras_length,
+      params = params ++ [
         total_body_length: total_body_length,
         opaque: opaque,
         cas: cas,
         extras: extras
-      ] |> body(body)
-    else
-      params = [
-        opcode: opcode(opcode),
-        key_length: key_length,
-        extras_length: extras_length,
       ]
+
+      params = params |> body(body)
     end
 
     # status
