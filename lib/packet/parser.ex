@@ -134,7 +134,7 @@ defmodule Memcachedx.Packet.Parser do
       params = body(params, body)
     end
 
-    result = [{status(status), params}] ++ acc
+    result = acc ++ [{status(status), params}]
 
     if Kernel.byte_size(rest) > 0 do
       result = recur_response(rest, result)
@@ -144,6 +144,6 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def response(message) do
-    Enum.reverse(recur_response(message, []))
+    recur_response(message, [])
   end
 end
