@@ -117,24 +117,24 @@ defmodule Memcachedx.Packet.Parser do
     }
   end
 
+  def status(status) do
+    if status == 0 do
+      status = :ok
+    else
+      status = :error
+    end
+  end
+
   def recur_response(message, acc) do
     {params, status, rest} = header_top(message)
 
     if Kernel.byte_size(rest) > 0 do
       {params, rest} = header_middle(params, rest)
       {params, body, rest} = header_bottom(params, rest)
-
-      params = params |> body(body)
+      params = body(params, body)
     end
 
-    # status
-    if status == 0 do
-      status = :ok
-    else
-      status = :error
-    end
-
-    result = [{status, params}] ++ acc
+    result = [{status(status), params}] ++ acc
 
     if Kernel.byte_size(rest) > 0 do
       result = recur_response(rest, result)
