@@ -66,7 +66,7 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
-  def header(
+  def header_top(
     <<
       magic :: [size(1), unit(8)],
       opcode :: [size(1), unit(8)],
@@ -84,19 +84,31 @@ defmodule Memcachedx.Packet.Parser do
       ], status, rest}
   end
 
+  def header_bottom(params,
+     <<
+      total_body_length :: [size(4), unit(8)],
+      opaque :: [size(4), unit(8)],
+      cas :: [size(8), unit(8)],
+      rest :: binary
+    >> = message
+  ) do
+    body_length = total_body_length - params[:extras_length]
+
+    {params ++ [
+      total_body_length: total_body_length,
+      opaque: opaque,
+      cas: cas,
+    ], rest }
+  end
+
   def recur_response(message, acc) do
-    {params, status, rest} = header(message)
+    {params, status, rest} = header_top(message)
 
     if Kernel.byte_size(rest) > 0 do
-      <<
-        total_body_length :: [size(4), unit(8)],
-        opaque :: [size(4), unit(8)],
-        cas :: [size(8), unit(8)],
-        rest :: binary
-      >> = rest
+      {params, rest} = header_bottom(params, rest)
 
-      body_length = total_body_length - params[:extras_length]
       extras_length = params[:extras_length]
+      body_length = params[:total_body_length] - extras_length
       <<
         extras :: [size(extras_length), unit(8)],
         body :: [binary, size(body_length)],
@@ -104,9 +116,6 @@ defmodule Memcachedx.Packet.Parser do
       >> = rest
 
       params = params ++ [
-        total_body_length: total_body_length,
-        opaque: opaque,
-        cas: cas,
         extras: extras
       ]
 
