@@ -7,7 +7,6 @@ defmodule Memcachedx.Packet.Parser do
   alias Memcachedx.Packet.Response.Header, as: Header
   alias Memcachedx.Packet.Response.Body, as: Body
 
-
   def status(status) do
     if status == 0 do
       status = :ok
@@ -17,11 +16,11 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def recursively_parse_response(message, acc) do
-    {params, status, rest} = Header.top(message)
+    {params, status, rest} = Header.parse_top(message)
 
     if Kernel.byte_size(rest) > 0 do
-      {params, rest} = Header.middle(params, rest)
-      {params, body, rest} = Header.bottom(params, rest)
+      {params, rest} = Header.parse_middle(params, rest)
+      {params, body, rest} = Header.parse_bottom(params, rest)
       params = Body.parse(params, body)
     end
 

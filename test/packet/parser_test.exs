@@ -2,6 +2,14 @@ defmodule Memcachedx.Packet.ParserTest do
   use ExUnit.Case
   alias Memcachedx.Packet.Parser, as: Parser
 
+  test 'status ok' do
+    assert Parser.status(0) == :ok
+  end
+
+  test 'status error' do
+    assert Parser.status(1) == :error
+  end
+
   test 'response single new' do
     assert Parser.response(<<
       129, 2, 0, 0,
