@@ -25,7 +25,7 @@ defmodule Memcachedx.Packet.Response.Header do
     end
   end
 
-  def header_top(
+  def top(
     <<
       magic :: [size(1), unit(8)],
       opcode :: [size(1), unit(8)],
@@ -43,7 +43,7 @@ defmodule Memcachedx.Packet.Response.Header do
       ], status, rest}
   end
 
-  def header_middle(params,
+  def middle(params,
      <<
       total_body_length :: [size(4), unit(8)],
       opaque :: [size(4), unit(8)],
@@ -60,7 +60,7 @@ defmodule Memcachedx.Packet.Response.Header do
     ], rest }
   end
 
-  def header_bottom(params, message) do
+  def bottom(params, message) do
     extras_length = params[:extras_length]
     body_length = params[:total_body_length] - extras_length
     <<

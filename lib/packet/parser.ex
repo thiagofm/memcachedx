@@ -49,11 +49,11 @@ defmodule Memcachedx.Packet.Parser do
   end
 
   def recur_response(message, acc) do
-    {params, status, rest} = Header.header_top(message)
+    {params, status, rest} = Header.top(message)
 
     if Kernel.byte_size(rest) > 0 do
-      {params, rest} = Header.header_middle(params, rest)
-      {params, body, rest} = Header.header_bottom(params, rest)
+      {params, rest} = Header.middle(params, rest)
+      {params, body, rest} = Header.bottom(params, rest)
       params = body(params, body)
     end
 
