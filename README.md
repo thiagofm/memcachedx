@@ -1,13 +1,14 @@
-# Memcachedx [in development]
+# Memcachedx
 
-I want to make this the default choice for memcached in elixir. Feel
-free to help or to get in touch.
+A memcached client for the binary memcached protocol.
+
+{<img src="https://travis-ci.org/thiagofm/memcachedx.png" />}[https://travis-ci.org/thiagofm/memcachedx]
 
 ## Roadmap
 
 - Connection pools
-- Rewrite parser to use directly binary instead of converting it to a
-  list
+- Improve docs
+- Extensive examples
 
 ## Usage
 
