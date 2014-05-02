@@ -1,6 +1,6 @@
 defmodule Memcachedx.TestHelper do
   def memcached_up do
-    IO.inspect System.cmd("sudo memcached &")
+    IO.inspect System.cmd("sudo service memcached start")
     sleep
   end
 
@@ -11,7 +11,7 @@ defmodule Memcachedx.TestHelper do
 
   # Sleep to wait for memcached process to be set up
   defp sleep do
-    :timer.sleep 50
+    :timer.sleep 100
   end
 end
 
