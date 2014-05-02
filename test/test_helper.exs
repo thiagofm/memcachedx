@@ -1,11 +1,11 @@
 defmodule Memcachedx.TestHelper do
   def memcached_up do
-    System.cmd("memcached -p 11211 &")
+    System.cmd("sudo service memcached start")
     sleep
   end
 
   def memcached_down do
-    System.cmd("pkill memcached")
+    System.cmd("sudo service memcached stop")
     sleep
   end
 
