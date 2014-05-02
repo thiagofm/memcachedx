@@ -10,7 +10,8 @@ before_install:
 before_script:
   - export PATH=`pwd`/elixir/bin:$PATH
   - MIX_ENV=test mix do deps.get
+  - sudo service memcached stop
 script:
   - mix test
 services:
-  - memcache
+  - memcached
