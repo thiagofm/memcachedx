@@ -1,11 +1,11 @@
 defmodule Memcachedx.TestHelper do
   def memcached_up do
-    IO.inspect System.cmd("memcached &")
+    IO.inspect System.cmd("sudo memcached &")
     sleep
   end
 
   def memcached_down do
-    IO.inspect System.cmd("pkill memcached")
+    IO.inspect System.cmd("sudo pkill memcached")
     sleep
   end
 
