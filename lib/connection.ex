@@ -20,7 +20,7 @@ defmodule Memcachedx.Connection do
   def start_link(options) do
     case :gen_server.start_link(__MODULE__, [], []) do
       { :ok, pid } ->
-        options = options |> Keyword.update!(:hostname, &if is_binary(&1), do: String.to_char_list!(&1), else: &1)
+        options = options |> Keyword.update!(:hostname, &if is_binary(&1), do: List.from_char_data(&1), else: &1)
         case :gen_server.call(pid, { :connect, options }) do
           :ok -> { :ok, pid }
           err -> { :error, err }

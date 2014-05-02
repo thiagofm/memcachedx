@@ -6,7 +6,6 @@ defmodule Memcachedx.TestHelper do
 
   def memcached_down do
     IO.inspect System.cmd("sudo pkill memcached")
-    sleep
   end
 
   # Sleep to wait for memcached process to be set up
