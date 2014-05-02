@@ -11,7 +11,7 @@ defmodule Memcachedx.TestHelper do
 
   # Sleep to wait for memcached process to be set up
   defp sleep do
-    :timer.sleep 200
+    :timer.sleep 50
   end
 end
 
