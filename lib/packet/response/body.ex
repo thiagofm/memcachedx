@@ -1,4 +1,8 @@
 defmodule Memcachedx.Packet.Response.Body do
+  @moduledoc """
+  Parsers the body of a packet received from the memcached server.
+  """
+
   def parse(params, body) do
     key_length = params[:key_length]
     value_length = params[:total_body_length] - params[:key_length] - params[:extras_length]

@@ -1,5 +1,5 @@
 defmodule Memcachedx.Utils.Options do
-  @doc """
+  @moduledoc """
   Initialize variables included in the vars list as 0 or empty string instead
   of nil
   """
