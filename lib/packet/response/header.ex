@@ -1,4 +1,8 @@
 defmodule Memcachedx.Packet.Response.Header do
+  @moduledoc """
+  Parses the header of a packet received from the memcached server.
+  """
+
   def opcode(opcode) do
     case opcode do
       0x00 -> :get

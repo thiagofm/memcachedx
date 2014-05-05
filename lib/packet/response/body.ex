@@ -1,6 +1,6 @@
 defmodule Memcachedx.Packet.Response.Body do
   @moduledoc """
-  Parsers the body of a packet received from the memcached server.
+  Parses the body of a packet received from the memcached server.
   """
 
   def parse(params, body) do
