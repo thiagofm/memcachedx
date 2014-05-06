@@ -18,10 +18,12 @@ defmodule Memcachedx.Packet.Parser do
   def recursively_parse_response(message, acc) do
     {params, status, rest} = Header.parse_top(message)
 
-    if Kernel.byte_size(rest) > 0 do
+    if Kernel.byte_size(rest) >= 4 do
       {params, rest} = Header.parse_middle(params, rest)
       {params, body, rest} = Header.parse_bottom(params, rest)
       params = Body.parse(params, body)
+    else
+      rest = <<>>
     end
 
     result = acc ++ [{status(status), params}]
