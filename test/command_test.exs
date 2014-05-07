@@ -13,17 +13,24 @@ defmodule Memcachedx.CommandTest do
     :ok
   end
 
-  test 'get simple' do
+  test 'get' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", flags: 0, expiry: 0]])
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Command.get(pid, "Hello") == {:ok, "World"}
   end
 
-  test 'set simple' do
+  test 'set' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Command.set(pid, "Hello", "World") == {:ok, []}
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Command.get(pid, "Hello") == {:ok, "World"}
+  end
+
+  test 'get!' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Command.set(pid, "Hello", "World") == {:ok, []}
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Command.get!(pid, "Hello") == "World"
   end
 end

@@ -1,4 +1,11 @@
 defmodule Memcachedx.Command do
+  def get!(pid, key) do
+    case get(pid, key) do
+      {:ok, value} -> value
+      {:error, params} -> raise params
+    end
+  end
+
   def get(pid, key) do
     case Memcachedx.Connection.run(pid, [:get, [key: key]]) do
       [ok: params] = res -> { :ok, params[:value] }
