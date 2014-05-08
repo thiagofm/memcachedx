@@ -30,7 +30,7 @@ defmodule Memcachedx.Connection do
   end
 
   def handle_call({:connect, options}, from, state(state: :ready) = s) do
-    case :gen_tcp.connect(options[:hostname], options[:port], [:binary, {:active, :once}, { :packet, :raw }]) do
+    case :gen_tcp.connect(options[:hostname], options[:port], [:binary, {:keepalive, :true}, { :packet, :raw }, {:recbuf, 2048}]) do
       { :ok, sock } ->
         s = state(state: :ready, options: options, sock: {:gen_tcp, sock}, reply_to: from)
         { :reply, :ok, s }
@@ -39,7 +39,7 @@ defmodule Memcachedx.Connection do
     end
   end
 
-  def handle_call(:stop, from, state(state: :ready) = s) do
+  def handle_call(:stop, from, s) do
     {:stop, :normal, state(s, reply_to: from) }
   end
 
@@ -70,7 +70,7 @@ defmodule Memcachedx.Connection do
   def handle_info({:tcp, sock, msg}, state(reply_to: to) = s) do
     :gen_server.reply(to, Memcachedx.Packet.Parser.response(msg))
 
-    { :noreply, state }
+    { :noreply, state(s, state: :ready) }
   end
 
   def stop(pid) do

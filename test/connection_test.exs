@@ -117,7 +117,7 @@ defmodule Memcachedx.ConnectionTest do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     whole_response = Connection.run(pid, [:stat, []])
 
-    assert Enum.count(whole_response) == 40
+    assert Enum.count(whole_response) == 49
 
     {status, response} = Enum.at(whole_response, 0)
     assert status == :ok

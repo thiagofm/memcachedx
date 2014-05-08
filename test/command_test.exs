@@ -22,8 +22,7 @@ defmodule Memcachedx.CommandTest do
 
   test 'set' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Command.set(pid, "Hello", "World") == {:ok, []}
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.set(pid, "Hello", "World")
     assert Command.get(pid, "Hello") == {:ok, "World"}
   end
 
