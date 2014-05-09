@@ -52,7 +52,6 @@ defmodule Memcachedx.ConnectionTest do
   test 'delete success' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [opcode: :set, key: "Hello", value: "World", flags: 0, expiry: 0]])
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Connection.run(pid, [:delete, [key: "Hello"]]) == [{:ok, [opcode: :delete, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 0, extras: 0, key: "", value: ""]}]
   end
 
@@ -64,7 +63,6 @@ defmodule Memcachedx.ConnectionTest do
   test 'incr success' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "counter", value: "1", flags: 0, expiry: 0]])
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Connection.run(pid, [:incr, [key: "counter", delta: 0x01, initial: 0x00, expiration: 0x00000e10]]) == [{:ok, [opcode: :incr, key_length: 0, extras_length: 0, total_body_length: 8, opaque: 0, cas: 2, extras: 0, key: "", value: <<0, 0, 0, 0, 0, 0, 0, 2>>]}]
     end
 
@@ -76,14 +74,12 @@ defmodule Memcachedx.ConnectionTest do
   test 'get doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", flags: 0, expiry: 0]])
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Connection.run(pid, [:get, [key: "Hello"]]) == [{:ok, [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: 0, key: "", value: "World"]}]
   end
 
   test 'get no defined flags' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", expiry: 0]])
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Connection.run(pid, [:get, [key: "Hello"]]) == [{:ok, [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: 0, key: "", value: "World"]}]
   end
 
