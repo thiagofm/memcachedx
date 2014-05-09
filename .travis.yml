@@ -14,4 +14,4 @@ before_script:
   - export PATH=`pwd`/elixir/bin:$PATH
   - MIX_ENV=test mix do deps.get
 script:
-  - mix test
+  - TEST_ENV=travis mix test
