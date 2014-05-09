@@ -2,7 +2,7 @@
 
 A memcached client for the binary memcached protocol.
 
-[![Build Status](https://travis-ci.org/thiagofm/memcachedx)](http://travis-ci.org/thiagofm/memcachedx)
+[![Build Status](https://travis-ci.org/thiagofm/memcachedx.svg)](http://travis-ci.org/thiagofm/memcachedx)
 
 ## Roadmap
 
