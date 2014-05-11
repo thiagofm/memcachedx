@@ -3,6 +3,14 @@ defmodule Memcachedx.Packet.Response.Body do
   Parses the body of a packet received from the memcached server.
   """
 
+  @doc """
+  Parses the key and value from the body, if the key or value is not found it's
+  set as an empty string.
+
+  When the requests is a getk, which implies that the value length isn't
+  included in the key length, it uses a different rule to calculate the value's
+  length.
+  """
   def parse(params, body) do
     key_length = params[:key_length]
     value_length = params[:total_body_length] - params[:key_length] - params[:extras_length]
