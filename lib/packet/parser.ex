@@ -7,6 +7,9 @@ defmodule Memcachedx.Packet.Parser do
   alias Memcachedx.Packet.Response.Header, as: Header
   alias Memcachedx.Packet.Response.Body, as: Body
 
+  @doc """
+  The status code for the response
+  """
   def status(status) do
     if status == 0 do
       status = :ok
@@ -15,6 +18,10 @@ defmodule Memcachedx.Packet.Parser do
     end
   end
 
+
+  @doc """
+  Parses the response recursively while there's still rest
+  """
   def recursively_parse_response(message, acc) do
     {params, status, rest} = Header.parse_top(message)
 
@@ -35,6 +42,9 @@ defmodule Memcachedx.Packet.Parser do
     result
   end
 
+  @doc """
+  Starts the recursively_parse_response with an accumulator
+  """
   def response(message) do
     recursively_parse_response(message, [])
   end
