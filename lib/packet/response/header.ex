@@ -3,6 +3,9 @@ defmodule Memcachedx.Packet.Response.Header do
   Parses the header of a packet received from the memcached server.
   """
 
+  @doc """
+  The opcodes for every command
+  """
   def opcode(opcode) do
     case opcode do
       0x00 -> :get
@@ -29,6 +32,10 @@ defmodule Memcachedx.Packet.Response.Header do
     end
   end
 
+  @doc """
+  Parses the top part of the header, leaving the rest to be parsed for the
+  parse_middle function.
+  """
   def parse_top(
     <<
       magic :: [size(1), unit(8)],
@@ -47,6 +54,13 @@ defmodule Memcachedx.Packet.Response.Header do
       ], status, rest}
   end
 
+  @doc """
+  Parses the middle part of the header, leaving the rest to be parsed for the
+  parse_bottom function.
+
+  The real body length is calculated based on the total_body_length and extras
+  length.
+  """
   def parse_middle(params,
      <<
       total_body_length :: [size(4), unit(8)],
@@ -64,6 +78,9 @@ defmodule Memcachedx.Packet.Response.Header do
     ], rest }
   end
 
+  @doc """
+  Parses the bottom part of the header, the rest is the "real" body.
+  """
   def parse_bottom(params, message) do
     extras_length = params[:extras_length]
     body_length = params[:total_body_length] - extras_length
