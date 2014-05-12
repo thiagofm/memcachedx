@@ -16,18 +16,12 @@ defmodule Memcachedx.CommandTest do
   test 'get success' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Connection.run(pid, [:set, [key: "Hello", value: "World", flags: 0, expiry: 0]])
-    assert Command.get(pid, "Hello") == {:ok, "World"}
+    assert Command.get(pid, "Hello") == [ok: [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: 0, key: "", value: "World"]]
   end
 
   test 'get error' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Command.get(pid, "Hello") == {:error, "Not found"}
-  end
-
-  test 'set' do
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    Command.set(pid, "Hello", "World")
-    assert Command.get(pid, "Hello") == {:ok, "World"}
+    assert Command.get(pid, "Hello") == [error: [opcode: :get, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found"]]
   end
 
   test 'get! success' do
@@ -39,5 +33,11 @@ defmodule Memcachedx.CommandTest do
   test 'get! error' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Command.get!(pid, "Hello") == ""
+  end
+
+  test 'set' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Command.set(pid, "Hello", "World")
+    assert Command.get(pid, "Hello") == [ok: [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: 0, key: "", value: "World"]]
   end
 end
