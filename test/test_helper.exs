@@ -6,7 +6,7 @@ defmodule Memcachedx.TestHelper do
       System.cmd("memcached &")
     end
 
-    :timer.sleep 100
+    :timer.sleep 50
   end
 
   def memcached_down do
