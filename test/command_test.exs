@@ -32,7 +32,9 @@ defmodule Memcachedx.CommandTest do
 
   test 'get! error' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Command.get!(pid, "Hello") == ""
+    assert_raise Memcachedx.Error, fn ->
+      Command.get!(pid, "Hello")
+    end
   end
 
   test 'set success' do

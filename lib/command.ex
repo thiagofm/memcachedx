@@ -2,11 +2,7 @@ defmodule Memcachedx.Command do
   def get!(pid, key) do
     case get(pid, key) do
       [{:ok, params}] -> params[:value]
-      [{:error, params}] ->
-        case params[:value] do
-          "Not found" -> ""
-          "" -> raise "Foo" # TODO
-        end
+      [{:error, params}] -> raise Memcachedx.Error
     end
   end
 
@@ -25,7 +21,7 @@ defmodule Memcachedx.Command do
   def set!(pid, key, value) do
     case set(pid, key, value) do
       [{:ok, params}] -> true
-      [{:error, params}] -> false
+      [{:error, params}] -> raise Memcachedx.Error
     end
   end
 end
