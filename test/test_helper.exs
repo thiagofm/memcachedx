@@ -15,6 +15,8 @@ defmodule Memcachedx.TestHelper do
     else
       System.cmd("pkill memcached")
     end
+
+    :timer.sleep 50
   end
 end
 
