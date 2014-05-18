@@ -49,4 +49,14 @@ defmodule Memcachedx.Command do
       res -> res
     end
   end
+
+  @doc """
+  Deletes a new key/value pair in memcached
+  """
+  def delete!(pid, key) do
+    case delete(pid, key) do
+      [{:ok, params}] -> true
+      [{:error, params}] -> raise Memcachedx.Error
+    end
+  end
 end
