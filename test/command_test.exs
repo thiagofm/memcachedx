@@ -47,4 +47,10 @@ defmodule Memcachedx.CommandTest do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert Command.set!(pid, "Hello", "World") == true
   end
+
+  test 'delete success' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.set(pid, "Hello", "World")
+    assert Command.delete(pid, "Hello")
+  end
 end

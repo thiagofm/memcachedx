@@ -40,4 +40,13 @@ defmodule Memcachedx.Command do
       [{:error, params}] -> raise Memcachedx.Error
     end
   end
+
+  @doc """
+  Deletes a new key/value pair in memcached
+  """
+  def delete(pid, key) do
+    case Memcachedx.Connection.run(pid, [:delete, [key: key]]) do
+      res -> res
+    end
+  end
 end
