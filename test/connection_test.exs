@@ -57,7 +57,7 @@ defmodule Memcachedx.ConnectionTest do
 
   test 'delete fail' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:delete, [key: "Hello"]]) == [{:error, [opcode: :delete, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found"]}]
+    assert Connection.run(pid, [:delete, [key: "Hello"]]) == [error: [opcode: :delete, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found", error: "Key not found"]]
   end
 
   test 'incr success' do
@@ -85,7 +85,7 @@ defmodule Memcachedx.ConnectionTest do
 
   test 'get fail from doc example' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Connection.run(pid, [:get, [key: "counter3"]]) == [{:error, [opcode: :get, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found"]}]
+    assert Connection.run(pid, [:get, [key: "counter3"]]) == [error: [opcode: :get, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found", error: "Key not found"]]
   end
 
   test 'quit from doc example' do

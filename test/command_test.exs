@@ -21,7 +21,7 @@ defmodule Memcachedx.CommandTest do
 
   test 'get error' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert Command.get(pid, "Hello") == [error: [opcode: :get, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found"]]
+    assert Command.get(pid, "Hello") == [error: [opcode: :get, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found", error: "Key not found"]]
   end
 
   test 'get! success' do
@@ -55,6 +55,12 @@ defmodule Memcachedx.CommandTest do
   end
 
   test 'delete! success' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.set(pid, "Hello", "World")
+    assert Command.delete!(pid, "Hello") == true
+  end
+
+  test 'delete! error' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Command.set(pid, "Hello", "World")
     assert Command.delete!(pid, "Hello") == true

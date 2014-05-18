@@ -32,6 +32,7 @@ defmodule Memcachedx.Packet.Response.Header do
     end
   end
 
+
   @doc """
   Parses the top part of the header, leaving the rest to be parsed for the
   parse_middle function.
