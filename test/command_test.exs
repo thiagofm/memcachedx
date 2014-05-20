@@ -62,12 +62,6 @@ defmodule Memcachedx.CommandTest do
 
   test 'delete! error' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    Command.set(pid, "Hello", "World")
-    assert Command.delete!(pid, "Hello") == true
-  end
-
-  test 'delete! error' do
-    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     assert_raise Memcachedx.Error, fn ->
       Command.delete!(pid, "Hello")
     end

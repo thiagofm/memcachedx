@@ -1,6 +1,6 @@
 defmodule Memcachedx.Connection do
   @moduledoc """
-    Responsable for keeping state of the tcp connection with memcached
+    Responsible for keeping state of the tcp connection with memcached
   """
 
   use GenServer.Behaviour
