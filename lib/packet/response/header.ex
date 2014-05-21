@@ -72,11 +72,12 @@ defmodule Memcachedx.Packet.Response.Header do
   ) do
     body_length = total_body_length - params[:extras_length]
 
-    {params ++ [
-      total_body_length: total_body_length,
-      opaque: opaque,
-      cas: cas,
-    ], rest }
+    {
+      params ++ [
+        total_body_length: total_body_length,
+        opaque: opaque,
+        cas: cas,
+      ], rest }
   end
 
   @doc """
