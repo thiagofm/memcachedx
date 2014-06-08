@@ -9,7 +9,7 @@ defmodule Memcachedx.Command do
   def get!(pid, key) do
     case get(pid, key) do
       [{:ok, params}] -> params[:value]
-      [{:error, params}] -> raise Memcachedx.Error
+      [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
     end
   end
 
@@ -37,7 +37,7 @@ defmodule Memcachedx.Command do
   def set!(pid, key, value) do
     case set(pid, key, value) do
       [{:ok, params}] -> true
-      [{:error, params}] -> raise Memcachedx.Error
+      [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
     end
   end
 
@@ -56,7 +56,7 @@ defmodule Memcachedx.Command do
   def delete!(pid, key) do
     case delete(pid, key) do
       [{:ok, params}] -> true
-      [{:error, params}] -> raise Memcachedx.Error
+      [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
     end
   end
 end

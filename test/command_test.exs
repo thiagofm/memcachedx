@@ -30,9 +30,9 @@ defmodule Memcachedx.CommandTest do
     assert Command.get!(pid, "Hello") == "World"
   end
 
-  test 'get! error' do
+  test 'get! error - key not found' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert_raise Memcachedx.Error, fn ->
+    assert_raise Memcachedx.Error, "Key not found", fn ->
       Command.get!(pid, "Hello")
     end
   end
@@ -60,9 +60,9 @@ defmodule Memcachedx.CommandTest do
     assert Command.delete!(pid, "Hello") == true
   end
 
-  test 'delete! error' do
+  test 'delete! error - key not found' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
-    assert_raise Memcachedx.Error, fn ->
+    assert_raise Memcachedx.Error, "Key not found", fn ->
       Command.delete!(pid, "Hello")
     end
   end
