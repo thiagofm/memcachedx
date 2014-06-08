@@ -59,4 +59,23 @@ defmodule Memcachedx.Command do
       [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
     end
   end
+
+  @doc """
+  Adds a new key/value pair in memcached
+  """
+  def add(pid, key, value) do
+    case Memcachedx.Connection.run(pid, [:add, [key: key, value: value]]) do
+      res -> res
+    end
+  end
+
+  @doc """
+  Adds a new key/value pair in memcached
+  """
+  def add!(pid, key, value) do
+    case add(pid, key, value) do
+      [{:ok, params}] -> true
+      [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
+    end
+  end
 end

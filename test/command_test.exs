@@ -48,6 +48,31 @@ defmodule Memcachedx.CommandTest do
     assert Command.set!(pid, "Hello", "World") == true
   end
 
+  test 'add success' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.add(pid, "Hello", "World")
+    assert Command.get(pid, "Hello") == [ok: [opcode: :get, key_length: 0, extras_length: 4, total_body_length: 9, opaque: 0, cas: 1, extras: 0, key: "", value: "World"]]
+  end
+
+  test 'add! success' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Command.add!(pid, "Hello", "World") == true
+  end
+
+  test 'add error' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.add!(pid, "Hello", "World")
+    assert Command.add(pid, "Hello", "World") == [error: [opcode: :add, key_length: 0, extras_length: 0, total_body_length: 20, opaque: 0, cas: 0, extras: 0, key: "", value: "Data exists for key.", error: "Key exists"]]
+  end
+
+  test 'add! error' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.add!(pid, "Hello", "World")
+    assert_raise Memcachedx.Error, "Key exists", fn ->
+      Command.add!(pid, "Hello", "World")
+    end
+  end
+
   test 'delete success' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Command.set(pid, "Hello", "World")
