@@ -78,4 +78,24 @@ defmodule Memcachedx.Command do
       [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
     end
   end
+
+  @doc """
+  Replace a value from an existing key in memcached
+  """
+  def replace(pid, key, value) do
+    case Memcachedx.Connection.run(pid, [:replace, [key: key, value: value]]) do
+      res -> res
+    end
+  end
+
+
+  @doc """
+  Replace a value from an existing key in memcached
+  """
+  def replace!(pid, key, value) do
+    case replace(pid, key, value) do
+      [{:ok, params}] -> true
+      [{:error, params}] -> raise Memcachedx.Error[message: params[:error]]
+    end
+  end
 end

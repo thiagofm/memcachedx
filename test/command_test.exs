@@ -73,6 +73,30 @@ defmodule Memcachedx.CommandTest do
     end
   end
 
+  test 'replace success' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.add(pid, "Hello", "World")
+    assert Command.replace(pid, "Hello", "Foo") == [ok: [opcode: :replace, key_length: 0, extras_length: 0, total_body_length: 0, opaque: 0, cas: 2, extras: 0, key: "", value: ""]]
+  end
+
+  test 'replace! success' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    Command.add(pid, "Hello", "World")
+    assert Command.replace!(pid, "Hello", "Foo") == true
+  end
+
+  test 'replace error' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert Command.replace(pid, "Hello", "World") == [error: [opcode: :replace, key_length: 0, extras_length: 0, total_body_length: 9, opaque: 0, cas: 0, extras: 0, key: "", value: "Not found", error: "Key not found"]] 
+  end
+
+  test 'replace! error' do
+    {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
+    assert_raise Memcachedx.Error, "Key not found", fn ->
+      Command.replace!(pid, "Hello", "World")
+    end
+  end
+
   test 'delete success' do
     {:ok, pid} = Connection.start_link([hostname: "localhost", port: 11211])
     Command.set(pid, "Hello", "World")
